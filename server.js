@@ -170,6 +170,27 @@ app.post("/api/fiches", async (req, res) => {
   }
 });
 
+// Suivi public (sans mot de passe) : statut + récap non sensible
+app.get("/api/fiches/:ref/statut", async (req, res) => {
+  const ref = String(req.params.ref || "").trim().toUpperCase();
+  const db = await readDb();
+  const f = db.find((x) => x.ref === ref);
+  if (!f) return res.status(404).json({ ok: false, error: "Référence introuvable." });
+  res.json({
+    ok: true,
+    ref: f.ref,
+    date: f.date,
+    statut: f.statut,
+    nom_client: f.nom_client,
+    pays: f.pays,
+    ville: f.ville,
+    types_courses: f.types_courses,
+    delai_souhaite: f.delai_souhaite || "",
+    total_estime_fcfa: f.total_estime_fcfa,
+    avance_fcfa: f.avance_fcfa
+  });
+});
+
 app.patch("/api/fiches/:ref", async (req, res) => {
   const pass = (req.query.pass || req.body.pass || "").toString().toUpperCase();
   if (!ADMINS.includes(pass)) return res.status(401).json({ error: "Accès refusé." });

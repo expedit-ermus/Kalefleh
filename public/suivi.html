@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suivi de commande — KALEFLEH</title>
+  <meta name="description" content="Suis l'avancement de ta demande de devis ou de ta commande KALEFLEH avec ta référence." />
+  <link rel="icon" type="image/png" href="favicon-32.png" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Suivi de commande — KALEFLEH" />
+  <meta property="og:url" content="https://kalefleh.vercel.app/suivi.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="/" class="navbar-logo">KALEFLEH</a>
+    <div class="navbar-links">
+      <a href="/#comment">Étapes</a>
+      <a href="/#tarifs">Tarifs</a>
+      <a href="/#devis" class="btn-nav">Devis gratuit</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">📦 Suivi de commande</p>
+      <h1 class="hero-title">Où en est<br /><span>ma commande ?</span></h1>
+      <p class="tagline">Entre ta référence (ex : <strong>KF-MSP80LRT</strong>) reçue après ta demande.<br />On t'affiche l'avancement en temps réel.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card form-card">
+      <div class="form-head">
+        <h2>Rechercher ma référence</h2>
+        <p>Elle commence par <strong>KF-</strong> et figure dans la confirmation.</p>
+      </div>
+      <form id="suiviForm" novalidate>
+        <label class="full">Référence de commande
+          <input type="text" id="refInput" placeholder="KF-XXXXXXXX" style="text-transform:uppercase" required />
+        </label>
+        <button type="submit" class="btn-primary btn-submit">Suivre ma commande</button>
+        <p class="form-status" id="suiviStatus" role="status"></p>
+      </form>
+    </section>
+
+    <section class="card" id="resultBox" hidden>
+      <div class="form-head">
+        <h2 id="rRef"></h2>
+        <p id="rMeta"></p>
+      </div>
+
+      <div class="track" id="track"></div>
+
+      <div class="fiche-grid" id="rSummary">
+        <div><span>Statut :</span> <strong id="rStatut"></strong></div>
+        <div><span>Délai souhaité :</span> <span id="rDelai"></span></div>
+        <div><span>Total estimé :</span> <strong id="rTotal"></strong></div>
+        <div><span>Avance versée :</span> <strong id="rAvance"></strong></div>
+        <div><span>Ville :</span> <span id="rVille"></span></div>
+        <div><span>Courses :</span> <span id="rTypes"></span></div>
+      </div>
+
+      <p class="totals-note" style="margin-top:12px">Une question ? Écris-nous, on te répond sur WhatsApp ou par email.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><strong>KALEFLEH</strong> — Tu commandes, on fait tes courses.</p>
+  </footer>
+
+  <script>
+    var STATUTS = ["NOUVEAU", "CONTACTÉ", "EN COURS", "EXPÉDIÉ", "TERMINÉ"];
+    var form = document.getElementById("suiviForm");
+    var input = document.getElementById("refInput");
+    var status = document.getElementById("suiviStatus");
+
+    function money(v) { return new Intl.NumberFormat("fr-FR").format(Number(v) || 0) + " FCFA"; }
+
+    function renderTrack(statut) {
+      var idx = STATUTS.indexOf(statut);
+      var labels = {
+        "NOUVEAU": "Reçu",
+        "CONTACTÉ": "Contacté",
+        "EN COURS": "Courses",
+        "EXPÉDIÉ": "Expédié",
+        "TERMINÉ": "Livré"
+      };
+      var track = document.getElementById("track");
+      track.innerHTML = STATUTS.map(function (s, i) {
+        var done = i <= idx;
+        return '<div class="step' + (done ? " done" : "") + '">' +
+          '<span class="dot">' + (done ? "✓" : i + 1) + "</span>" +
+          "<span>" + labels[s] + "</span></div>";
+      }).join("");
+    }
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      var ref = input.value.trim().toUpperCase();
+      status.className = "form-status";
+      status.textContent = "Recherche...";
+      var box = document.getElementById("resultBox");
+      box.hidden = true;
+      if (!/^KF-[A-Z0-9]+$/.test(ref)) {
+        status.className = "form-status err";
+        status.textContent = "Référence invalide. Format attendu : KF-XXXXXXXX.";
+        return;
+      }
+      try {
+        var res = await fetch("/api/fiches/" + encodeURIComponent(ref) + "/statut");
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Introuvable.");
+        status.className = "form-status ok";
+        status.textContent = "Commande trouvée !";
+        document.getElementById("rRef").textContent = data.ref;
+        document.getElementById("rMeta").textContent = "Demande du " + new Date(data.date).toLocaleDateString("fr-FR") + " — " + data.nom_client;
+        document.getElementById("rStatut").textContent = data.statut;
+        document.getElementById("rDelai").textContent = data.delai_souhaite || "—";
+        document.getElementById("rTotal").textContent = money(data.total_estime_fcfa);
+        document.getElementById("rAvance").textContent = money(data.avance_fcfa);
+        document.getElementById("rVille").textContent = data.pays + " — " + data.ville;
+        document.getElementById("rTypes").textContent = (data.types_courses || []).join(", ") || "—";
+        renderTrack(data.statut);
+        box.hidden = false;
+      } catch (err) {
+        status.className = "form-status err";
+        status.textContent = "Aucune commande trouvée avec cette référence. Vérifie et réessaie.";
+      }
+    });
+  </script>
+</body>
+</html>

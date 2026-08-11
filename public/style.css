@@ -273,6 +273,14 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 
 .hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; opacity: 0; }
 
+/* Suivi de commande */
+.track { display: flex; justify-content: space-between; gap: 4px; margin: 20px 0 24px; }
+.step { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; font-size: .72rem; font-weight: 700; color: var(--muted); text-align: center; }
+.step .dot { width: 30px; height: 30px; border-radius: 50%; background: #eee; color: #999; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+.step.done { color: var(--ok); }
+.step.done .dot { background: var(--ok); color: #fff; }
+#rSummary strong { color: var(--primary-dark); }
+
 /* Submit */
 .form-cta { text-align: center; margin-top: 8px; }
 .btn-submit { width: 100%; padding: 16px; font-size: 1.1rem; }
