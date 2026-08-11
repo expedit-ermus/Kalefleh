@@ -4,9 +4,11 @@ const fs = require("fs");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DATA_DIR = path.join(__dirname, "data");
+const DATA_DIR = process.env.VERCEL ? "/tmp" : path.join(__dirname, "data");
 const DB_FILE = path.join(DATA_DIR, "fiche-clients.json");
-const ADMINS = ["ALJABIR", "KADJA", "ADMIN"];
+const ADMINS = process.env.KALEFLEH_ADMINS
+  ? process.env.KALEFLEH_ADMINS.split(",").map((s) => s.trim().toUpperCase()).filter(Boolean)
+  : ["ALJABIR", "KADJA", "ADMIN"];
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -110,7 +112,11 @@ app.get("/api/export/fiches.csv", (req, res) => {
   res.send("\uFEFF" + csv);
 });
 
-app.listen(PORT, () => {
-  console.log(`KALEFLEH est en ligne sur http://localhost:${PORT}`);
-  console.log(`Base de fiches clients : ${DB_FILE}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`KALEFLEH est en ligne sur http://localhost:${PORT}`);
+    console.log(`Base de fiches clients : ${DB_FILE}`);
+  });
+}
+
+module.exports = app;

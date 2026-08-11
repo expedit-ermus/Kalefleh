@@ -12,6 +12,7 @@
     "favicons": "node tools/make-favicons.mjs"
   },
   "devDependencies": {
+    "@vercel/node": "^5.9.9",
     "playwright": "^1.62.1"
   },
   "engines": {
