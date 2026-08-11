@@ -135,6 +135,21 @@ app.patch("/api/fiches/:ref", async (req, res) => {
   }
 });
 
+app.delete("/api/fiches/:ref", async (req, res) => {
+  const pass = (req.query.pass || req.body.pass || "").toString().toUpperCase();
+  if (!ADMINS.includes(pass)) return res.status(401).json({ error: "Accès refusé." });
+  const db = await readDb();
+  const idx = db.findIndex((f) => f.ref === req.params.ref);
+  if (idx === -1) return res.status(404).json({ error: "Fiche introuvable." });
+  const [removed] = db.splice(idx, 1);
+  try {
+    await writeDb(db);
+    res.json({ ok: true, ref: removed.ref });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
 app.get("/api/export/fiches.csv", async (req, res) => {
   const pass = req.query.pass || "";
   if (!ADMINS.includes(pass.toUpperCase())) {

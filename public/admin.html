@@ -60,6 +60,22 @@
     .statut-select select { padding: 7px 10px; border: 1px solid #e5d7c5; border-radius: 8px; font-weight: 700; cursor: pointer; }
     .wa-link { margin-left: auto; background: #25D366; color: #fff; padding: 8px 14px; border-radius: 9px; text-decoration: none; font-weight: 700; font-size: .85rem; }
     .wa-link:hover { background: #1ebe5b; }
+    .btn-mini { padding: 7px 12px; border: 1px solid #e5d7c5; background: #fff; border-radius: 8px; font-size: .82rem; font-weight: 700; cursor: pointer; }
+    .btn-mini:hover { background: #f5eee2; }
+    .btn-mini.btn-danger { color: #a33; border-color: #ecc; }
+    .btn-mini.btn-save { background: var(--dark); color: #fff; border-color: var(--dark); }
+    .btn-mini.btn-save:hover { background: #3A2A17; }
+    .fiche-edit { margin-top: 10px; padding: 12px; background: #faf6ef; border: 1px dashed #e5d7c5; border-radius: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .fiche-edit label { display: flex; flex-direction: column; font-size: .82rem; color: var(--muted); gap: 4px; }
+    .fiche-edit input, .fiche-edit textarea { padding: 8px 10px; border: 1px solid #e5d7c5; border-radius: 8px; font-size: .92rem; }
+    .fiche-edit textarea { grid-column: 1 / -1; resize: vertical; }
+    .fiche-edit .btn-save { justify-self: start; }
+    .stats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .stat-chip { background: var(--dark); color: #fff; border-radius: 12px; padding: 8px 14px; display: flex; flex-direction: column; line-height: 1.2; }
+    .stat-chip b { font-size: 1.05rem; color: var(--amber-light); }
+    .stat-chip span { font-size: .72rem; opacity: .8; text-transform: uppercase; }
+    .stat-chip.stat-total { background: #7a3d00; }
+    .stat-chip.stat-avance { background: #155724; }
     .badge.stat-NOUVEAU { background: var(--amber-tint); color: #7a3d00; }
     .badge.stat-CONTACT { background: #fff3cd; color: #856404; }
     .badge.stat-ENCOURS { background: #d1ecf1; color: #0c5460; }
@@ -108,6 +124,7 @@
           <option>TERMINÉ</option>
         </select>
       </div>
+      <div class="stats" id="statsBox" hidden></div>
       <div id="fiches"></div>
     </div>
   </main>
@@ -141,10 +158,32 @@
         if (!res.ok) throw new Error(data.error || "Accès refusé.");
         allFiches = data.fiches || [];
         document.getElementById("count").textContent = allFiches.length + " fiche(s)";
+        renderStats();
         renderFiches();
       } catch (err) {
         holder.innerHTML = '<p class="empty">' + esc(err.message) + "</p>";
       }
+    }
+
+    function renderStats() {
+      var box = document.getElementById("statsBox");
+      if (!allFiches.length) { box.hidden = true; return; }
+      var byStatut = {};
+      var totalEstime = 0;
+      var totalAvance = 0;
+      allFiches.forEach(function (f) {
+        byStatut[f.statut] = (byStatut[f.statut] || 0) + 1;
+        totalEstime += Number(f.total_estime_fcfa) || 0;
+        totalAvance += Number(f.avance_fcfa) || 0;
+      });
+      var html = '<div class="stat-chip"><b>' + allFiches.length + '</b><span>fiches</span></div>';
+      STATUTS.forEach(function (s) {
+        if (byStatut[s]) html += '<div class="stat-chip"><b>' + byStatut[s] + '</b><span>' + s.toLowerCase() + '</span></div>';
+      });
+      html += '<div class="stat-chip stat-total"><b>' + money(totalEstime) + '</b><span>total estimé</span></div>';
+      if (totalAvance > 0) html += '<div class="stat-chip stat-avance"><b>' + money(totalAvance) + '</b><span>avances reçues</span></div>';
+      box.innerHTML = html;
+      box.hidden = false;
     }
 
     function renderFiches() {
@@ -183,11 +222,39 @@
             return '<option' + (s === f.statut ? " selected" : "") + '>' + esc(s) + '</option>';
           }).join("") + "</select></label>" +
           (f.whatsapp ? '<a class="wa-link" href="https://wa.me/' + f.whatsapp.replace(/\D/g, "") + '" target="_blank" rel="noopener">💬 WhatsApp</a>' : "") +
+          '<button class="btn-mini" data-action="edit" data-ref="' + esc(f.ref) + '">✏️ Modifier</button>' +
+          '<button class="btn-mini btn-danger" data-action="delete" data-ref="' + esc(f.ref) + '">🗑️</button>' +
+          "</div>" +
+          '<div class="fiche-edit" id="edit-' + esc(f.ref) + '" hidden>' +
+          '<label>Avance versée (FCFA)<input type="number" class="e-avance" min="0" value="' + (Number(f.avance_fcfa) || 0) + '" /></label>' +
+          '<label>Total estimé (FCFA)<input type="number" class="e-total" min="0" value="' + (Number(f.total_estime_fcfa) || 0) + '" /></label>' +
+          '<label>Commentaire<textarea class="e-com" rows="2">' + esc(f.commentaire || "") + '</textarea></label>' +
+          '<button class="btn-mini btn-save" data-ref="' + esc(f.ref) + '">💾 Enregistrer</button>' +
           "</div>";
         holder.appendChild(el);
 
         var sel = el.querySelector('select[data-ref]');
         sel.addEventListener("change", function () { updateStatut(f.ref, sel.value); });
+
+        el.querySelector('[data-action="edit"]').addEventListener("click", function () {
+          var box = document.getElementById("edit-" + f.ref);
+          box.hidden = !box.hidden;
+        });
+
+        el.querySelector('[data-action="delete"]').addEventListener("click", function () {
+          if (confirm("Supprimer définitivement la fiche " + f.ref + " (" + f.nom_client + ") ?")) {
+            deleteFiche(f.ref);
+          }
+        });
+
+        el.querySelector(".btn-save").addEventListener("click", function () {
+          var payload = {
+            avance_fcfa: Number(el.querySelector(".e-avance").value) || 0,
+            total_estime_fcfa: Number(el.querySelector(".e-total").value) || 0,
+            commentaire: el.querySelector(".e-com").value
+          };
+          updateFiche(f.ref, payload);
+        });
       });
     }
 
@@ -204,6 +271,34 @@
       } catch (err) {
         alert("Erreur changement de statut : " + err.message);
         loadFiches();
+      }
+    }
+
+    async function updateFiche(ref, payload) {
+      try {
+        var res = await fetch("/api/fiches/" + encodeURIComponent(ref) + "?pass=" + encodeURIComponent(pass), {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Erreur.");
+        loadFiches();
+      } catch (err) {
+        alert("Erreur modification : " + err.message);
+      }
+    }
+
+    async function deleteFiche(ref) {
+      try {
+        var res = await fetch("/api/fiches/" + encodeURIComponent(ref) + "?pass=" + encodeURIComponent(pass), {
+          method: "DELETE"
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Erreur.");
+        loadFiches();
+      } catch (err) {
+        alert("Erreur suppression : " + err.message);
       }
     }
 

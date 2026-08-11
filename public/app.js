@@ -123,6 +123,15 @@
     setStatus("Envoi en cours...", false);
     status.classList.remove("err", "ok");
 
+    // Honeypot anti-spam : si rempli (robot), on feint le succès sans envoyer
+    var hp = document.getElementById("website");
+    if (hp && hp.value) {
+      setStatus("Demande reçue ! Nous vous contactons très vite. 🙌", true);
+      form.reset();
+      setTimeout(function () { status.textContent = ""; }, 10000);
+      return;
+    }
+
     var nom = document.getElementById("nomClient").value.trim();
     var tel = document.getElementById("telephone").value.trim();
     if (!nom || !tel) {

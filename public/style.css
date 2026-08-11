@@ -271,6 +271,8 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 .total-line.total strong { color: #fff; font-size: 1.3rem; font-weight: 900; }
 .totals-note { color: #cfc4b5; font-size: .8rem; margin-top: 8px; border-top: 1px solid #3a342c; padding-top: 8px; }
 
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; opacity: 0; }
+
 /* Submit */
 .form-cta { text-align: center; margin-top: 8px; }
 .btn-submit { width: 100%; padding: 16px; font-size: 1.1rem; }
