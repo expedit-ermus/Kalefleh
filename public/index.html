@@ -129,8 +129,8 @@
       <h2 class="center">Prestation simple et transparente</h2>
       <p class="center muted">La prestation couvre nos déplacements. L'expédition est en plus (à la charge du client).</p>
       <div class="price-grid">
-        <div class="price"><strong>5 000 F</strong><span>Petite course</span><p>1 à 2 déplacements — zone Abidjan</p></div>
-        <div class="price price-hot"><strong>10 000 F</strong><span>Course complète</span><p>Shopping multi-boutiques (marché, magasins)</p><span class="pop">★ Le plus choisi</span></div>
+        <div class="price"><strong>8 000 F</strong><span>Petite course</span><p>3 à 5 petits articles — zone Abidjan</p></div>
+        <div class="price price-hot"><strong>15 000 F</strong><span>Course complète</span><p>Shopping multi-boutiques (marché, magasins)</p><span class="pop">★ Le plus choisi</span></div>
         <div class="price"><strong>Sur devis</strong><span>Grosse commande</span><p>Plusieurs livraisons, différentes villes</p></div>
       </div>
     </section>
@@ -196,7 +196,7 @@
             <div class="total-line"><span>Budget course</span><strong id="tBudget">0</strong></div>
             <div class="total-line"><span>Prestation KALEFLEH</span><strong id="tPrestation">0</strong></div>
             <div class="total-line"><span>Total estimé (hors expédition)</span><strong id="tTotal">0</strong></div>
-            <p class="totals-note">Prestation indicative : 5 000 F (petite course) à 10 000 F (course complète). L'expédition se confirme au devis.</p>
+            <p class="totals-note">Prestation indicative : 8 000 F (petite course, 3 à 5 articles) à 15 000 F (course complète). L'expédition se confirme au devis.</p>
           </div>
         </div>
 
@@ -229,9 +229,12 @@
 
         <!-- CTA + garantie -->
         <div class="form-cta">
+          <div class="recap" id="recap" hidden></div>
           <button type="submit" class="btn-primary btn-submit">Envoyer ma demande — devis gratuit</button>
           <p class="form-status" id="formStatus" role="status"></p>
+          <a id="followWhatsapp" class="btn-outline whatsapp-follow" href="#" target="_blank" rel="noopener" style="display:none">📱 Suivre sur WhatsApp</a>
           <p class="reassure">✅ Aucun paiement pour la demande · ⚠️ Pas de documents administratifs</p>
+          <input type="hidden" id="whatsappAdmin" value="[NUMERO_WHATSAPP]" />
         </div>
       </form>
     </section>

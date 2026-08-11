@@ -46,6 +46,25 @@
     .type-tag { background: var(--dark); color: var(--amber-light); padding: 2px 10px; border-radius: 20px; font-size: .8rem; font-weight: 700; }
     .empty { text-align: center; color: var(--muted); padding: 30px 0; }
     .login { max-width: 420px; margin: 40px auto; }
+    .admin-tools { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .admin-tools input[type="search"] {
+      flex: 1; min-width: 200px; padding: 11px 14px;
+      border: 1px solid #e5d7c5; border-radius: 10px; font-size: .92rem;
+    }
+    .admin-tools select {
+      padding: 11px 14px; border: 1px solid #e5d7c5; border-radius: 10px;
+      font-size: .92rem; background: #fff; cursor: pointer;
+    }
+    .fiche-actions { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding-top: 10px; border-top: 1px dashed #e5d7c5; }
+    .statut-select { font-size: .85rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .statut-select select { padding: 7px 10px; border: 1px solid #e5d7c5; border-radius: 8px; font-weight: 700; cursor: pointer; }
+    .wa-link { margin-left: auto; background: #25D366; color: #fff; padding: 8px 14px; border-radius: 9px; text-decoration: none; font-weight: 700; font-size: .85rem; }
+    .wa-link:hover { background: #1ebe5b; }
+    .badge.stat-NOUVEAU { background: var(--amber-tint); color: #7a3d00; }
+    .badge.stat-CONTACT { background: #fff3cd; color: #856404; }
+    .badge.stat-ENCOURS { background: #d1ecf1; color: #0c5460; }
+    .badge.stat-EXPEDI { background: #cce5ff; color: #004085; }
+    .badge.stat-TERMINE { background: #d4edda; color: #155724; }
     @media (max-width: 640px) { .fiche-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -78,6 +97,17 @@
           <button class="btn-secondary" id="btnLogout">Déconnexion</button>
         </div>
       </div>
+      <div class="admin-tools">
+        <input type="search" id="searchInput" placeholder="Rechercher (nom, téléphone, réf)…" />
+        <select id="statutFilter">
+          <option value="">Tous les statuts</option>
+          <option>NOUVEAU</option>
+          <option>CONTACTÉ</option>
+          <option>EN COURS</option>
+          <option>EXPÉDIÉ</option>
+          <option>TERMINÉ</option>
+        </select>
+      </div>
       <div id="fiches"></div>
     </div>
   </main>
@@ -91,6 +121,10 @@
     var panelBox = document.getElementById("panelBox");
     var loginBox = document.getElementById("loginBox");
     var loginMsg = document.getElementById("loginMsg");
+    var allFiches = [];
+    var searchInput = document.getElementById("searchInput");
+    var statutFilter = document.getElementById("statutFilter");
+    var STATUTS = ["NOUVEAU", "CONTACTÉ", "EN COURS", "EXPÉDIÉ", "TERMINÉ"];
 
     function showPanel() {
       loginBox.style.display = "none";
@@ -105,32 +139,76 @@
         var res = await fetch("/api/fiches?pass=" + encodeURIComponent(pass));
         var data = await res.json();
         if (!res.ok) throw new Error(data.error || "Accès refusé.");
-        document.getElementById("count").textContent = data.count + " fiche(s)";
-        if (!data.fiches.length) { holder.innerHTML = '<p class="empty">Aucune fiche pour le moment.</p>'; return; }
-        holder.innerHTML = "";
-        data.fiches.forEach(function (f) {
-          var el = document.createElement("div");
-          el.className = "fiche-card";
-          el.innerHTML =
-            '<div class="fiche-head"><span class="ref">' + esc(f.ref) + '</span>' +
-            '<span class="badge">' + esc(f.statut) + '</span>' +
-            '<span class="date">' + esc(new Date(f.date).toLocaleString("fr-FR")) + '</span></div>' +
-            '<div class="types">' + f.types_courses.map(function (t) { return '<span class="type-tag">' + esc(t) + "</span>"; }).join("") + "</div>" +
-            '<div class="fiche-grid">' +
-            cell("Client", f.nom_client) + cell("Téléphone", f.telephone) +
-            cell("WhatsApp", f.whatsapp) + cell("Pays / Ville", f.pays + " — " + f.ville) +
-            cell("Budget", money(f.budget_fcfa)) + cell("Prestation", money(f.prestation_fcfa)) +
-            cell("Expédition", money(f.expedition_fcfa)) + cell("Total estimé", money(f.total_estime_fcfa)) +
-            cell("Avance", money(f.avance_fcfa)) + cell("Paiement", f.paiement) +
-            cell("Compagnie", f.compagnie_expedition) + cell("Livraison", f.adresse_livraison) +
-            cell("Détail course", f.details_course) + cell("Commentaire", f.commentaire) +
-            "</div>";
-          holder.appendChild(el);
-        });
+        allFiches = data.fiches || [];
+        document.getElementById("count").textContent = allFiches.length + " fiche(s)";
+        renderFiches();
       } catch (err) {
         holder.innerHTML = '<p class="empty">' + esc(err.message) + "</p>";
       }
     }
+
+    function renderFiches() {
+      var holder = document.getElementById("fiches");
+      var q = (searchInput.value || "").trim().toLowerCase();
+      var sf = statutFilter.value;
+      var rows = allFiches.filter(function (f) {
+        if (sf && f.statut !== sf) return false;
+        if (!q) return true;
+        return (f.nom_client + " " + f.telephone + " " + f.ref + " " + f.pays + " " + f.ville).toLowerCase().indexOf(q) !== -1;
+      });
+
+      holder.innerHTML = "";
+      if (!rows.length) { holder.innerHTML = '<p class="empty">Aucune fiche.</p>'; return; }
+
+      rows.forEach(function (f) {
+        var el = document.createElement("div");
+        el.className = "fiche-card";
+        el.innerHTML =
+          '<div class="fiche-head"><span class="ref">' + esc(f.ref) + '</span>' +
+          '<span class="badge stat-' + esc(f.statut.replace(/\s/g, "")) + '">' + esc(f.statut) + '</span>' +
+          '<span class="date">' + esc(new Date(f.date).toLocaleString("fr-FR")) + '</span></div>' +
+          '<div class="types">' + f.types_courses.map(function (t) { return '<span class="type-tag">' + esc(t) + "</span>"; }).join("") + "</div>" +
+          '<div class="fiche-grid">' +
+          cell("Client", f.nom_client) + cell("Téléphone", f.telephone) +
+          cell("WhatsApp", f.whatsapp) + cell("Pays / Ville", f.pays + " — " + f.ville) +
+          cell("Budget", money(f.budget_fcfa)) + cell("Prestation", money(f.prestation_fcfa)) +
+          cell("Expédition", money(f.expedition_fcfa)) + cell("Total estimé", money(f.total_estime_fcfa)) +
+          cell("Avance", money(f.avance_fcfa)) + cell("Paiement", f.paiement) +
+          cell("Compagnie", f.compagnie_expedition) + cell("Livraison", f.adresse_livraison) +
+          cell("Détail course", f.details_course) + cell("Commentaire", f.commentaire) +
+          '</div>' +
+          '<div class="fiche-actions">' +
+          '<label class="statut-select">Statut : ' +
+          '<select data-ref="' + esc(f.ref) + '">' + STATUTS.map(function (s) {
+            return '<option' + (s === f.statut ? " selected" : "") + '>' + esc(s) + '</option>';
+          }).join("") + "</select></label>" +
+          (f.whatsapp ? '<a class="wa-link" href="https://wa.me/' + f.whatsapp.replace(/\D/g, "") + '" target="_blank" rel="noopener">💬 WhatsApp</a>' : "") +
+          "</div>";
+        holder.appendChild(el);
+
+        var sel = el.querySelector('select[data-ref]');
+        sel.addEventListener("change", function () { updateStatut(f.ref, sel.value); });
+      });
+    }
+
+    async function updateStatut(ref, statut) {
+      try {
+        var res = await fetch("/api/fiches/" + encodeURIComponent(ref) + "?pass=" + encodeURIComponent(pass), {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ statut: statut })
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Erreur.");
+        loadFiches();
+      } catch (err) {
+        alert("Erreur changement de statut : " + err.message);
+        loadFiches();
+      }
+    }
+
+    searchInput.addEventListener("input", renderFiches);
+    statutFilter.addEventListener("change", renderFiches);
 
     function cell(name, val) {
       return "<div><span>" + esc(name) + " :</span> " + esc(val || "—") + "</div>";

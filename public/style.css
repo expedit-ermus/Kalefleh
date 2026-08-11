@@ -279,6 +279,33 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 .form-status.ok { color: var(--ok); }
 .form-status.err { color: var(--err); }
 
+/* Récap live */
+.recap {
+  background: var(--dark);
+  color: #fff;
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  text-align: left;
+  display: grid;
+  gap: 6px;
+  font-size: .92rem;
+}
+.recap b { color: var(--primary-light); }
+
+.whatsapp-follow {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: .95rem;
+  background: #25D366;
+  color: #fff !important;
+  text-decoration: none;
+}
+.whatsapp-follow:hover { background: #1ebe5b; }
+
 /* FAQ ---------------------------------------------------- */
 details { background: #f9f4ec; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
 summary { cursor: pointer; font-weight: 700; color: var(--dark); list-style: none; display: flex; justify-content: space-between; align-items: center; }
