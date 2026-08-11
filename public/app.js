@@ -30,8 +30,65 @@
   var status = document.getElementById("formStatus");
   var form = document.getElementById("devisForm");
 
+  // ---- Navigation par étapes ----
+  var currentStep = 1;
+  var stepBodies = Array.from(document.querySelectorAll("[data-step-body]"));
+  var steps = Array.from(document.querySelectorAll("#stepper .step"));
+
+  function showStep(n) {
+    currentStep = n;
+    stepBodies.forEach(function (b) {
+      b.hidden = Number(b.dataset.stepBody) !== n;
+    });
+    steps.forEach(function (s) {
+      var sn = Number(s.dataset.step);
+      s.classList.toggle("active", sn === n);
+      s.classList.toggle("done", sn < n);
+    });
+    window.scrollTo({ top: form.getBoundingClientRect().top + window.pageYOffset - 90, behavior: "smooth" });
+  }
+
+  function validateStep(n) {
+    var body = stepBodies.find(function (b) { return Number(b.dataset.stepBody) === n; });
+    var required = body.querySelectorAll("input[required]");
+    for (var i = 0; i < required.length; i++) {
+      if (!required[i].value.trim()) {
+        required[i].focus();
+        required[i].style.borderColor = "var(--err)";
+        setTimeout(function () { required[i].style.borderColor = ""; }, 2500);
+        return false;
+      }
+    }
+    if (n === 2) {
+      var checked = body.querySelectorAll('input[name="typesCourses"]:checked').length;
+      if (!checked) {
+        var first = body.querySelector('.check');
+        if (first) {
+          first.style.borderColor = "var(--err)";
+          setTimeout(function () { first.style.borderColor = ""; }, 2500);
+        }
+        return false;
+      }
+    }
+    return true;
+  }
+
+  document.querySelectorAll(".btn-next").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var next = Number(btn.dataset.next);
+      if (validateStep(currentStep)) showStep(next);
+    });
+  });
+  document.querySelectorAll(".btn-prev").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      showStep(Number(btn.dataset.prev));
+    });
+  });
+
+  // ---- Envoi du formulaire ----
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
+    if (!validateStep(currentStep)) return;
     status.className = "form-status";
     status.textContent = "Envoi en cours...";
 
@@ -76,6 +133,8 @@
       status.textContent = "Devis envoyé ! Référence : " + data.fiche.ref + ". Nous vous contactons très vite. 🙌";
       form.reset();
       updateTotals();
+      showStep(1);
+      setTimeout(function () { status.textContent = ""; }, 8000);
     } catch (err) {
       status.className = "form-status err";
       status.textContent = "Échec de l'envoi : " + err.message;
