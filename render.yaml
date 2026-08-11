@@ -1,0 +1,16 @@
+# Render.com — configuration du service KALEFLEH
+# Créer le service automatiquement depuis le repo GitHub :
+# https://render.com → New → Blueprint → choisir ce repo
+services:
+  - type: web
+    name: kalefleh
+    runtime: node
+    repo: https://github.com/expedit-ermus/Kalefleh.git
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 3000
