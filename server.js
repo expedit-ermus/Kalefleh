@@ -57,7 +57,7 @@ async function writeDb(data) {
 function toCsv(rows) {
   const headers = [
     "ref", "date", "nom_client", "telephone", "whatsapp", "pays", "ville",
-    "types_courses", "details_course", "budget_fcfa", "prestation_fcfa",
+    "types_courses", "details_course", "delai_souhaite", "budget_fcfa", "prestation_fcfa",
     "expedition_fcfa", "total_estime_fcfa", "avance_fcfa", "paiement",
     "compagnie_expedition", "adresse_livraison", "commentaire", "statut"
   ];
@@ -99,6 +99,7 @@ app.post("/api/fiches", async (req, res) => {
     ville: String(b.ville || "Abidjan").trim(),
     types_courses: Array.isArray(b.typesCourses) ? b.typesCourses : [],
     details_course: String(b.detailsCourse || "").trim(),
+    delai_souhaite: String(b.delaiSouhaite || "").trim(),
     budget_fcfa: Number(b.budgetFcfa) || 0,
     prestation_fcfa: Number(b.prestationFcfa) || 0,
     expedition_fcfa: Number(b.expeditionFcfa) || 0,

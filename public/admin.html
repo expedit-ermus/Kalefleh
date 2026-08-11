@@ -76,6 +76,17 @@
     .stat-chip span { font-size: .72rem; opacity: .8; text-transform: uppercase; }
     .stat-chip.stat-total { background: #7a3d00; }
     .stat-chip.stat-avance { background: #155724; }
+    #newFicheBox { border: 2px dashed var(--primary); }
+    .new-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
+    .new-grid label, #newFicheBox > label { display: flex; flex-direction: column; gap: 4px; font-size: .82rem; color: var(--muted); }
+    .new-grid input, .new-grid select, #newFicheBox textarea, #newFicheBox > label input {
+      padding: 9px 11px; border: 1px solid #e5d7c5; border-radius: 8px; font-size: .92rem;
+    }
+    .new-grid textarea { resize: vertical; }
+    .check-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .check-row .check { font-size: .88rem; color: #222; }
+    .check-row .check input { margin-right: 4px; }
+    @media (max-width: 640px) { .new-grid { grid-template-columns: 1fr; } }
     .badge.stat-NOUVEAU { background: var(--amber-tint); color: #7a3d00; }
     .badge.stat-CONTACT { background: #fff3cd; color: #856404; }
     .badge.stat-ENCOURS { background: #d1ecf1; color: #0c5460; }
@@ -109,8 +120,62 @@
         <h2 style="margin:0;border:none;padding:0;text-transform:none">Fiches clients</h2>
         <span id="count" style="color:var(--muted)"></span>
         <div style="margin-left:auto;display:flex;gap:8px">
+          <button class="btn-secondary" id="btnNew">+ Nouvelle fiche</button>
           <button class="btn-secondary" id="btnExport">Exporter CSV</button>
           <button class="btn-secondary" id="btnLogout">Déconnexion</button>
+        </div>
+      </div>
+      <div class="card form-card" id="newFicheBox" hidden>
+        <div class="admin-bar">
+          <h3 style="margin:0;border:none;padding:0;text-transform:none">Nouvelle fiche (commande par WhatsApp / téléphone)</h3>
+          <button class="btn-mini" id="btnNewClose" type="button">✕ Fermer</button>
+        </div>
+        <div class="new-grid">
+          <label>Nom &amp; prénom <input type="text" id="nNom" required /></label>
+          <label>Téléphone / WhatsApp <input type="tel" id="nTel" placeholder="+225 07 07 07 07 07" required /></label>
+          <label>Pays <input type="text" id="nPays" placeholder="Côte d'Ivoire" /></label>
+          <label>Ville <input type="text" id="nVille" placeholder="Abidjan" /></label>
+        </div>
+        <div class="new-grid">
+          <label>Type(s) de course
+            <div class="check-row">
+              <label class="check"><input type="checkbox" class="nTypes" value="Vêtements" /> 👗 Vêtements</label>
+              <label class="check"><input type="checkbox" class="nTypes" value="Cosmétiques" /> 💄 Cosmétiques</label>
+              <label class="check"><input type="checkbox" class="nTypes" value="Perruques" /> 💇🏾‍♀️ Perruques</label>
+              <label class="check"><input type="checkbox" class="nTypes" value="Alimentaire" /> 🛒 Alimentaire</label>
+            </div>
+          </label>
+          <label>Paiement
+            <select id="nPaiement">
+              <option value="">-- Choisir --</option>
+              <option>Wave</option>
+              <option>Orange Money</option>
+              <option>MTN MoMo</option>
+              <option>Moov Money</option>
+              <option>Virement international (Western Union…)</option>
+              <option>Espèces</option>
+            </select>
+          </label>
+        </div>
+        <div class="new-grid">
+          <label>Budget (FCFA) <input type="number" id="nBudget" min="0" placeholder="0" /></label>
+          <label>Avance reçue (FCFA) <input type="number" id="nAvance" min="0" placeholder="0" /></label>
+          <label>Prestation (FCFA) <input type="number" id="nPrestation" min="0" placeholder="8000" /></label>
+          <label>Délai souhaité
+            <select id="nDelai">
+              <option value="">-- Choisir --</option>
+              <option>Pas d'urgence</option>
+              <option>Cette semaine</option>
+              <option>Sous 2 semaines</option>
+              <option>Ce mois-ci</option>
+            </select>
+          </label>
+        </div>
+        <label class="full">Adresse de livraison <input type="text" id="nAdresse" placeholder="Pays + ville + quartier" /></label>
+        <label class="full">Détail de la course / commentaire <textarea id="nCommentaire" rows="2"></textarea></label>
+        <div class="admin-bar">
+          <button class="btn-mini btn-save" id="btnNewSave">💾 Enregistrer la fiche</button>
+          <span id="newMsg" class="form-status"></span>
         </div>
       </div>
       <div class="admin-tools">
@@ -304,6 +369,69 @@
 
     searchInput.addEventListener("input", renderFiches);
     statutFilter.addEventListener("change", renderFiches);
+
+    var newFicheBox = document.getElementById("newFicheBox");
+    function resetNewForm() {
+      ["nNom", "nTel", "nPays", "nVille", "nBudget", "nAvance", "nPrestation", "nAdresse", "nCommentaire"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.value = "";
+      });
+      ["nPaiement", "nDelai"].forEach(function (id) { document.getElementById(id).value = ""; });
+      Array.from(document.querySelectorAll(".nTypes")).forEach(function (c) { c.checked = false; });
+      document.getElementById("newMsg").textContent = "";
+    }
+
+    document.getElementById("btnNew").onclick = function () {
+      newFicheBox.hidden = !newFicheBox.hidden;
+      if (!newFicheBox.hidden) resetNewForm();
+    };
+    document.getElementById("btnNewClose").onclick = function () { newFicheBox.hidden = true; };
+
+    document.getElementById("btnNewSave").onclick = async function () {
+      var nom = document.getElementById("nNom").value.trim();
+      var tel = document.getElementById("nTel").value.trim();
+      var msg = document.getElementById("newMsg");
+      if (!nom || !tel) { msg.className = "form-status err"; msg.textContent = "Nom et téléphone obligatoires."; return; }
+      var types = Array.from(document.querySelectorAll(".nTypes")).filter(function (c) { return c.checked; }).map(function (c) { return c.value; });
+      var budget = Number(document.getElementById("nBudget").value) || 0;
+      var avance = Number(document.getElementById("nAvance").value) || 0;
+      var prestation = Number(document.getElementById("nPrestation").value) || 0;
+      var total = budget + prestation;
+      var payload = {
+        nomClient: nom,
+        telephone: tel,
+        whatsapp: tel,
+        pays: document.getElementById("nPays").value.trim() || "Côte d'Ivoire",
+        ville: document.getElementById("nVille").value.trim() || "Abidjan",
+        typesCourses: types,
+        budgetFcfa: budget,
+        prestationFcfa: prestation,
+        expeditionFcfa: 0,
+        totalEstimeFcfa: total,
+        avanceFcfa: avance,
+        paiement: document.getElementById("nPaiement").value,
+        compagnieExpedition: "KALEFLEH s'occupe de tout",
+        adresseLivraison: document.getElementById("nAdresse").value.trim(),
+        delaiSouhaite: document.getElementById("nDelai").value,
+        commentaire: document.getElementById("nCommentaire").value.trim()
+      };
+      try {
+        var res = await fetch("/api/fiches", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Erreur.");
+        msg.className = "form-status ok";
+        msg.textContent = "Fiche " + data.fiche.ref + " enregistrée ✓";
+        newFicheBox.hidden = true;
+        loadFiches();
+      } catch (err) {
+        msg.className = "form-status err";
+        msg.textContent = "Erreur : " + err.message;
+      }
+    };
 
     function cell(name, val) {
       return "<div><span>" + esc(name) + " :</span> " + esc(val || "—") + "</div>";

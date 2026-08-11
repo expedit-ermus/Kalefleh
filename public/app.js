@@ -159,6 +159,7 @@
       ville: document.getElementById("ville").value,
       typesCourses: types,
       detailsCourse: document.getElementById("detailsCourse").value,
+      delaiSouhaite: document.getElementById("delaiSouhaite").value,
       budgetFcfa: budgetValue,
       prestationFcfa: prestation,
       expeditionFcfa: expedition,
