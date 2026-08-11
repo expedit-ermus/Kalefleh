@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const { put, get } = require("@vercel/blob");
+const nodemailer = require("nodemailer");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,6 +13,14 @@ const ADMINS = process.env.KALEFLEH_ADMINS
   : ["ALJABIR", "KADJA", "ADMIN"];
 const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
 const BLOB_PATH = "kalefleh/fiche-clients.json";
+const SMTP = {
+  host: process.env.SMTP_HOST || "",
+  port: Number(process.env.SMTP_PORT) || 587,
+  user: process.env.SMTP_USER || "",
+  pass: process.env.SMTP_PASS || "",
+  to: process.env.SMTP_TO || "kalefleh.shop@gmail.com"
+};
+const SMTP_READY = Boolean(SMTP.host && SMTP.user && SMTP.pass);
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -52,6 +61,45 @@ async function writeDb(data) {
     return;
   }
   fs.writeFileSync(DB_FILE, json);
+}
+
+async function sendNotification(fiche) {
+  if (!SMTP_READY) return;
+  const money = (v) => (Number(v) || 0).toLocaleString("fr-FR") + " FCFA";
+  const lines = [
+    `Nouvelle demande de devis — ${fiche.ref}`,
+    "",
+    `Client : ${fiche.nom_client} (${fiche.telephone})`,
+    `Localisation : ${fiche.pays} — ${fiche.ville}`,
+    `Courses : ${fiche.types_courses.join(", ") || "—"}`,
+    `Budget : ${money(fiche.budget_fcfa)} · Prestation : ${money(fiche.prestation_fcfa)}`,
+    `Total estimé : ${money(fiche.total_estime_fcfa)} · Avance : ${money(fiche.avance_fcfa)}`,
+    `Paiement : ${fiche.paiement || "—"}`,
+    `Délai souhaité : ${fiche.delai_souhaite || "—"}`,
+    `Livraison : ${fiche.adresse_livraison || "—"} (${fiche.compagnie_expedition})`,
+    "",
+    `Détails : ${fiche.details_course || "—"}`,
+    `Commentaire : ${fiche.commentaire || "—"}`,
+    "",
+    "Réponds-lui vite sur WhatsApp pour confirmer le devis."
+  ].join("\n");
+  try {
+    const transporter = nodemailer.createTransport({
+      host: SMTP.host,
+      port: SMTP.port,
+      secure: SMTP.port === 465,
+      auth: { user: SMTP.user, pass: SMTP.pass }
+    });
+    await transporter.sendMail({
+      from: `"KALEFLEH" <${SMTP.user}>`,
+      to: SMTP.to,
+      subject: `🔔 Nouvelle demande ${fiche.ref} — ${fiche.nom_client}`,
+      text: lines
+    });
+    console.log(`[notif] Email envoyé pour ${fiche.ref}`);
+  } catch (err) {
+    console.warn(`[notif] Échec email pour ${fiche.ref} :`, err.message);
+  }
 }
 
 function toCsv(rows) {
@@ -115,6 +163,7 @@ app.post("/api/fiches", async (req, res) => {
   db.push(fiche);
   try {
     await writeDb(db);
+    sendNotification(fiche); // non bloquant, silencieux si SMTP non configuré
     res.status(201).json({ ok: true, fiche });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
