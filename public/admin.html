@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KALEFLEH — Espace Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; margin-bottom: 16px; }
+    .admin-bar label { flex: 1; min-width: 200px; }
+    .btn-secondary {
+      padding: 12px 18px;
+      background: var(--dark);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      height: 44px;
+    }
+    .btn-secondary:hover { background: #333; }
+    .fiche-card {
+      border: 1px solid #e5d7c5;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      background: #fdfcfb;
+    }
+    .fiche-head { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .ref { font-weight: 800; color: var(--primary-dark); }
+    .date { color: var(--muted); font-size: .85rem; }
+    .badge {
+      background: #ffd9a8;
+      color: #7a3d00;
+      font-size: .72rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+    .fiche-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 18px; margin-top: 10px; font-size: .92rem; }
+    .fiche-grid div span { color: var(--muted); }
+    .types { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+    .type-tag { background: var(--dark); color: #ffcf9e; padding: 2px 10px; border-radius: 20px; font-size: .8rem; font-weight: 700; }
+    .empty { text-align: center; color: var(--muted); padding: 30px 0; }
+    .login { max-width: 420px; margin: 40px auto; }
+    @media (max-width: 640px) { .fiche-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="logo">KALEFLEH</div>
+      <p class="tagline">Espace Admin — Fiches clients</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="card login" id="loginBox">
+      <h2>Connexion</h2>
+      <div class="admin-bar">
+        <label>Mot de passe admin
+          <input type="password" id="passInput" placeholder="Mot de passe" />
+        </label>
+        <button class="btn-secondary" id="btnLogin">Accéder</button>
+      </div>
+      <p id="loginMsg" class="form-status err"></p>
+    </div>
+
+    <div class="card" id="panelBox" style="display:none">
+      <div class="admin-bar">
+        <h2 style="margin:0;border:none;padding:0;text-transform:none">Fiches clients</h2>
+        <span id="count" style="color:var(--muted)"></span>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <button class="btn-secondary" id="btnExport">Exporter CSV</button>
+          <button class="btn-secondary" id="btnLogout">Déconnexion</button>
+        </div>
+      </div>
+      <div id="fiches"></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p><strong>KALEFLEH</strong> — Espace Admin</p>
+  </footer>
+
+  <script>
+    var pass = sessionStorage.getItem("kf_pass") || "";
+    var panelBox = document.getElementById("panelBox");
+    var loginBox = document.getElementById("loginBox");
+    var loginMsg = document.getElementById("loginMsg");
+
+    function showPanel() {
+      loginBox.style.display = "none";
+      panelBox.style.display = "";
+      loadFiches();
+    }
+
+    async function loadFiches() {
+      var holder = document.getElementById("fiches");
+      holder.innerHTML = '<p class="empty">Chargement...</p>';
+      try {
+        var res = await fetch("/api/fiches?pass=" + encodeURIComponent(pass));
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Accès refusé.");
+        document.getElementById("count").textContent = data.count + " fiche(s)";
+        if (!data.fiches.length) { holder.innerHTML = '<p class="empty">Aucune fiche pour le moment.</p>'; return; }
+        holder.innerHTML = "";
+        data.fiches.forEach(function (f) {
+          var el = document.createElement("div");
+          el.className = "fiche-card";
+          el.innerHTML =
+            '<div class="fiche-head"><span class="ref">' + esc(f.ref) + '</span>' +
+            '<span class="badge">' + esc(f.statut) + '</span>' +
+            '<span class="date">' + esc(new Date(f.date).toLocaleString("fr-FR")) + '</span></div>' +
+            '<div class="types">' + f.types_courses.map(function (t) { return '<span class="type-tag">' + esc(t) + "</span>"; }).join("") + "</div>" +
+            '<div class="fiche-grid">' +
+            cell("Client", f.nom_client) + cell("Téléphone", f.telephone) +
+            cell("WhatsApp", f.whatsapp) + cell("Pays / Ville", f.pays + " — " + f.ville) +
+            cell("Budget", money(f.budget_fcfa)) + cell("Prestation", money(f.prestation_fcfa)) +
+            cell("Expédition", money(f.expedition_fcfa)) + cell("Total estimé", money(f.total_estime_fcfa)) +
+            cell("Avance", money(f.avance_fcfa)) + cell("Paiement", f.paiement) +
+            cell("Compagnie", f.compagnie_expedition) + cell("Livraison", f.adresse_livraison) +
+            cell("Détail course", f.details_course) + cell("Commentaire", f.commentaire) +
+            "</div>";
+          holder.appendChild(el);
+        });
+      } catch (err) {
+        holder.innerHTML = '<p class="empty">' + esc(err.message) + "</p>";
+      }
+    }
+
+    function cell(name, val) {
+      return "<div><span>" + esc(name) + " :</span> " + esc(val || "—") + "</div>";
+    }
+    function esc(s) {
+      return String(s == null ? "" : s)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
+    function money(v) { return new Intl.NumberFormat("fr-FR").format(Number(v) || 0) + " FCFA"; }
+
+    document.getElementById("btnLogin").onclick = async function () {
+      var v = document.getElementById("passInput").value.trim().toUpperCase();
+      if (!v) { loginMsg.textContent = "Entrez un mot de passe."; return; }
+      var res = await fetch("/api/fiches?pass=" + encodeURIComponent(v));
+      if (res.status === 401) { loginMsg.textContent = "Mot de passe incorrect."; return; }
+      pass = v;
+      sessionStorage.setItem("kf_pass", pass);
+      showPanel();
+    };
+
+    document.getElementById("btnExport").onclick = function () {
+      window.location.href = "/api/export/fiches.csv?pass=" + encodeURIComponent(pass);
+    };
+
+    document.getElementById("btnLogout").onclick = function () {
+      sessionStorage.removeItem("kf_pass");
+      pass = "";
+      location.reload();
+    };
+
+    if (pass) showPanel();
+    else document.getElementById("passInput").focus();
+  </script>
+</body>
+</html>

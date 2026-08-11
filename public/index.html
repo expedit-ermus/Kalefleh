@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KALEFLEH — Devis Courses & Shopping</title>
+  <meta name="description" content="KALEFLEH : votre service de courses au pays. Vous êtes à l'étranger ou occupé en Côte d'Ivoire ? On fait vos courses à votre place !" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="logo">KALEFLEH</div>
+      <p class="tagline">Depuis l'étranger, commande tout ce que tu veux en Côte d'Ivoire. <br />En Côte d'Ivoire aussi, même si tu n'as pas le temps.</p>
+      <ul class="hero-benefits">
+        <li>Tu commandes, on fait les courses à ta place</li>
+        <li>Vêtements, cosmétiques &amp; perruques, alimentaire</li>
+        <li>Expédition par la compagnie de ton choix</li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card intro">
+      <h1>Demande de devis</h1>
+      <p>À l'étranger, tu commandes tout ce que tu veux en Côte d'Ivoire. En Côte d'Ivoire, même sans temps pour y aller. Remplissez la fiche ci-dessous : nous calculons votre devis <strong>prestation (déplacement)</strong> + <strong>expédition</strong>. L'expédition reste à votre charge — ou confiez-la-nous, on vous propose les frais.</p>
+      <p class="note">Pas de documents administratifs. On ne fait que : <strong>vêtements, cosmétiques réglementés, perruques, alimentaire.</strong></p>
+    </section>
+
+    <form id="devisForm" class="card form" novalidate>
+      <h2>1. Votre identité</h2>
+      <div class="grid">
+        <label>Nom &amp; prénom
+          <input type="text" id="nomClient" name="nomClient" placeholder="Ex : Aya Kouassi" required />
+        </label>
+        <label>Téléphone
+          <input type="tel" id="telephone" name="telephone" placeholder="+225 07 07 07 07 07" required />
+        </label>
+        <label>WhatsApp (si différent)
+          <input type="tel" id="whatsapp" name="whatsapp" placeholder="+225 ..." />
+        </label>
+        <label>Pays de résidence
+          <input type="text" id="pays" name="pays" placeholder="Ex : Canada, France, USA, Côte d'Ivoire" />
+        </label>
+        <label>Ville
+          <input type="text" id="ville" name="ville" placeholder="Ex : Abidjan, Toronto, Paris" />
+        </label>
+      </div>
+
+      <h2>2. Vos courses</h2>
+      <div class="fieldset">
+        <p class="label">Type de courses (cochez tout ce qu'il faut)</p>
+        <div class="checkbox-grid">
+          <label class="check"><input type="checkbox" name="typesCourses" value="Vêtements" /> Vêtements</label>
+          <label class="check"><input type="checkbox" name="typesCourses" value="Cosmétiques" /> Cosmétiques</label>
+          <label class="check"><input type="checkbox" name="typesCourses" value="Perruques" /> Perruques</label>
+          <label class="check"><input type="checkbox" name="typesCourses" value="Alimentaire" /> Alimentaire</label>
+        </div>
+      </div>
+
+      <label class="full">Détail de la course
+        <textarea id="detailsCourse" name="detailsCourse" rows="3" placeholder="Décrivez ce qu'il faut acheter : articles, tailles, marques, quantités, boutiques préférées..."></textarea>
+      </label>
+
+      <h2>3. Budget &amp; calcul du devis</h2>
+      <div class="grid">
+        <label>Budget estimé de la course (FCFA)
+          <input type="number" id="budgetFcfa" name="budgetFcfa" min="0" placeholder="Ex : 100 000" />
+        </label>
+        <label>Prestation KALEFLEH (déplacement) — FCFA
+          <input type="number" id="prestationFcfa" name="prestationFcfa" min="0" placeholder="Se calcule selon les déplacements" />
+        </label>
+        <label>Frais d'expédition — FCFA
+          <input type="number" id="expeditionFcfa" name="expeditionFcfa" min="0" placeholder="À votre charge ou proposés par nous" />
+        </label>
+        <label>Avance à verser — FCFA
+          <input type="number" id="avanceFcfa" name="avanceFcfa" min="0" placeholder="Ex : 50 000 avant le shopping" />
+        </label>
+      </div>
+
+      <div class="totals">
+        <div class="total-line"><span>Budget course</span><strong id="tBudget">0</strong></div>
+        <div class="total-line"><span>Prestation KALEFLEH</span><strong id="tPrestation">0</strong></div>
+        <div class="total-line"><span>Expédition</span><strong id="tExpedition">0</strong></div>
+        <div class="total-line total"><span>Total estimé</span><strong id="tTotal">0</strong></div>
+        <div class="total-line"><span>Avance</span><strong id="tAvance">0</strong></div>
+        <div class="total-line rest"><span>Reste à payer</span><strong id="tReste">0</strong></div>
+      </div>
+
+      <h2>4. Paiement &amp; livraison</h2>
+      <div class="grid">
+        <label>Mode de paiement
+          <select id="paiement" name="paiement">
+            <option value="">-- Choisir --</option>
+            <option>Wave</option>
+            <option>Orange Money</option>
+            <option>MTN MoMo</option>
+            <option>Moov Money</option>
+            <option>Virement international (Western Union, etc.)</option>
+            <option>Espèces</option>
+          </select>
+        </label>
+        <label>Compagnie d'expédition
+          <input type="text" id="compagnieExpedition" name="compagnieExpedition" placeholder="Ex : ASJ, Coris, Karwa, La Poste... ou laisser vide" />
+        </label>
+        <label class="full">Adresse de livraison (pays + ville + quartier)
+          <input type="text" id="adresseLivraison" name="adresseLivraison" placeholder="Ex : Toronto — Avenue Road, Toronto ON" />
+        </label>
+      </div>
+
+      <label class="full">Commentaire
+        <textarea id="commentaire" name="commentaire" rows="2" placeholder="Précisions, délais souhaités, questions..."></textarea>
+      </label>
+
+      <button type="submit" class="btn-primary">Envoyer ma demande de devis</button>
+      <p class="form-status" id="formStatus" role="status"></p>
+    </form>
+
+    <section class="card how">
+      <h2>Comment ça marche ?</h2>
+      <ol>
+        <li><strong>Vous commandez, même depuis l'étranger</strong> — on reçoit votre fiche instantanément.</li>
+        <li><strong>On vous rappelle</strong> (WhatsApp / appel) pour confirmer et ajuster le devis.</li>
+        <li><strong>Avance</strong> versée → on fait tes courses, on vous envoie photos &amp; reçus.</li>
+        <li><strong>Expédition</strong> par votre compagnie ou via KALEFLEH.</li>
+        <li><strong>Livraison</strong> et solde. Vous recevez vos articles le sourire aux lèvres !</li>
+      </ol>
+    </section>
+
+    <section class="card categories">
+      <h2>Ce que l'on prend en charge</h2>
+      <div class="cat-grid">
+        <div class="cat"><span class="ic">👗</span><strong>Vêtements</strong></div>
+        <div class="cat"><span class="ic">💄</span><strong>Cosmétiques<br/>(réglementés)</strong></div>
+        <div class="cat"><span class="ic">💇🏾‍♀️</span><strong>Perruques</strong></div>
+        <div class="cat"><span class="ic">🛒</span><strong>Alimentaire</strong></div>
+      </div>
+      <p class="note"><strong>⚠️ On ne fait pas :</strong> documents administratifs, produits interdits.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><strong>KALEFLEH</strong> — Tu commandes, on fait tes courses — Côte d'Ivoire 🇨🇮 &amp; diaspora 🌍</p>
+    <p class="contact">WhatsApp : <a href="#" data-placeholder="[VOTRE NUMERO WHATSAPP]">[VOTRE NUMERO]</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "kalefleh",
+  "version": "1.0.0",
+  "description": "KALEFLEH — Service de courses & shopping pour la diaspora et la Côte d'Ivoire. Page de devis + base de fiches clients.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.22.2"
+  }
+}
