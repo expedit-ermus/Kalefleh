@@ -2,8 +2,9 @@
 
 > **Remplace avant publication :**
 > - `[NUMERO_WHATSAPP]` → ton numéro WhatsApp (format : `+225 07 07 07 07 07`)
-> - `[LIEN_DEVIS]` → l'adresse de ta page de devis (ex : `https://kalefleh.com/devis`)
 > - `[PSEUDO_IG_TIKTOK]` → ton pseudo Instagram / TikTok
+
+> ✅ **Lien de devis en ligne :** `https://kalefleh.vercel.app/` (déjà remplacé partout ci-dessous)
 
 ---
 
@@ -29,7 +30,7 @@ ON S'OCCUPE DE TOUT ! ✅
 💡 Ce qu'on NE fait pas : les documents administratifs.
 
 💰 Comment ça marche ?
-1. Tu passes ta commande 👉 [LIEN_DEVIS]
+1. Tu passes ta commande 👉 https://kalefleh.vercel.app/
 2. On te calcule le devis : prestation (déplacement) + expédition
 3. Tu verses une avance, on fait tes courses
 4. On t'envoie photos + reçus 📸
@@ -38,7 +39,7 @@ ON S'OCCUPE DE TOUT ! ✅
 
 📞 Questions ? Écris-nous sur WhatsApp : [NUMERO_WHATSAPP]
 
-🔗 Passe ta commande ici : [LIEN_DEVIS]
+🔗 Passe ta commande ici : https://kalefleh.vercel.app/
 
 KALEFLEH — Tu commandes, on fait tes courses. 🇨🇮🌍
 ```
@@ -59,7 +60,7 @@ KALEFLEH — Tu commandes, on fait tes courses. 🇨🇮🌍
 - **Image 3** : Étape 2 — « On te calcule le devis : prestation + expédition, tout est clair » 💰
 - **Image 4** : Étape 3 — « On fait tes courses et on t'envoie photos + reçus » 📸
 - **Image 5** : Étape 4 — « Expédition par ta compagnie ou via nous, livraison au pays ou chez toi » 📦
-- **Image 6** : « Passe ta commande 👉 [LIEN_DEVIS] — WhatsApp : [NUMERO_WHATSAPP] »
+- **Image 6** : « Passe ta commande 👉 https://kalefleh.vercel.app/ — WhatsApp : [NUMERO_WHATSAPP] »
 
 ### Légende (adaptable FB & IG)
 ```
@@ -75,7 +76,7 @@ Tu es à l'étranger ou au pays, sans une minute à toi ? KALEFLEH s'en charge !
 🧺 Vêtements · Cosmétiques · Perruques · Alimentaire
 🚫 Pas de documents administratifs.
 
-👉 Clique sur le lien dans la bio [LIEN_DEVIS]
+👉 Clique sur le lien dans la bio https://kalefleh.vercel.app/
 📞 WhatsApp : [NUMERO_WHATSAPP]
 
 Tu commandes quoi, toi, quand tu rentres ou pour la famille ? Dis-nous en commentaire 👇🏾
@@ -103,7 +104,7 @@ On fait les courses à ta place — depuis l'étranger ou au pays — on t'envoi
 
 Tu gardes le contrôle, on fait le travail. 💪🏾
 
-🔗 Passe ta commande en 2 minutes : [LIEN_DEVIS]
+🔗 Passe ta commande en 2 minutes : https://kalefleh.vercel.app/
 📞 WhatsApp : [NUMERO_WHATSAPP]
 #Kalefleh #DiasporaIvoirienne #OnSoccupeDeTout ...
 ```
@@ -118,7 +119,7 @@ Tu gardes le contrôle, on fait le travail. 💪🏾
 - Plan 3 : « Pas de souci. Tu commandes, on achète. »
 - Plan 4 : « KALEFLEH fait tes courses à ta place. »
 - Plan 5 : « Photos + reçus à l'appui, expédition par ta compagnie ou la nôtre. »
-- Plan 6 : « Passe ta commande en 2 minutes » 👉 [LIEN_DEVIS]
+- Plan 6 : « Passe ta commande en 2 minutes » 👉 https://kalefleh.vercel.app/
 - Légende : voir Post 1.
 
 ### Story question sticker (idées de question à coller)
@@ -153,7 +154,7 @@ Tu gardes le contrôle, on fait le travail. 💪🏾
 [0-2s] Texte : "À L'ÉTRANGER OU AU PAYS ?"
 [2-7s] "Commande tout ce que tu veux : vêtements, perruques, cosmétiques, alimentaire"
 [7-12s] "Pas le temps ? KALEFLEH fait les courses pour TOI"
-[12-15s] "Devis 👉 [LIEN_DEVIS]"
+[12-15s] "Devis 👉 https://kalefleh.vercel.app/"
 ```
 
 **Conseils TikTok :** voix off ou musique actuelle à tendance, planter le téléphone, texte à l'écran gros et coloré, tag `#Kalefleh #PourToi #Diaspora #CôteDIvoire #Abidjan #Shopping`.
@@ -174,7 +175,7 @@ tu commandes, on achète 🇨🇮
 🛒 Alimentaire
 
 Même sans le temps, on s'occupe de tout !
-Devis 👉 [LIEN_DEVIS]
+Devis 👉 https://kalefleh.vercel.app/
 WhatsApp 👉 [NUMERO_WHATSAPP]
 ```
 
@@ -193,7 +194,7 @@ KALEFLEH a fait la course, envoyé les photos et les reçus, et tout est parti p
 
 Merci [Nom] pour la confiance ! 🙏🏾
 
-📦 Tu veux faire pareil ? Devis en 2 minutes 👉 [LIEN_DEVIS]
+📦 Tu veux faire pareil ? Devis en 2 minutes 👉 https://kalefleh.vercel.app/
 📞 WhatsApp : [NUMERO_WHATSAPP]
 #Kalefleh #Temoignage #Diaspora #CoursesAbidjan
 ```

@@ -46,21 +46,21 @@ L'admin permet de :
 Chaque demande de devis crée une fiche avec :
 Nom, téléphone, WhatsApp, pays, ville · types de courses · détail · budget · prestation · expédition · total estimé · avance · mode de paiement · compagnie d'expédition · adresse de livraison · commentaire.
 
-## 🌐 Mettre en ligne (publier sur internet)
+## 🌐 Mise en ligne
 
-Option simple / gratuite — **Render** :
-1. Pousse ce dossier sur GitHub (`git init`, `git add .`, commit, push).
-2. Sur [render.com](https://render.com) → **New** → **Web Service** → connecte ton repo.
-3. Build command : `npm install` · Start command : `node server.js`
-4. Render te donne une adresse du type `https://kalefleh.onrender.com` → c'est ton `[LIEN_DEVIS]`.
+Le site est **déjà en ligne sur Vercel** :
 
-Alternative : **Railway.app** ou **Vercel** (Vercel nécessite une petite config pour les serveurs Node, Render est le plus simple ici).
+- **Page de devis :** https://kalefleh.vercel.app/ ← c'est ton `[LIEN_DEVIS]`
+- **Espace admin :** https://kalefleh.vercel.app/admin.html
+- **Persistance :** les fiches clients sont stockées dans un store **Vercel Blob** (durables, survivent aux redéploiements)
+
+Chaque push sur `main` (GitHub) redéploie automatiquement.
 
 ## 📁 Mettre à jour les numéros
 
 Avant de partager les posts : remplace dans `posts-lancement.md`, `public/index.html` et les SVG (`.svg`) :
 - `[NUMERO_WHATSAPP]` / `[VOTRE NUMERO]` → ton numéro WhatsApp réel
-- `[LIEN_DEVIS]` → l'adresse de ta page une fois en ligne
+- Le lien de devis est déjà en place : `https://kalefleh.vercel.app/`
 
 ## 🎨 Régénérer les visuels de marque
 

@@ -49,6 +49,6 @@
 
   <rect x="60" y="1530" width="960" height="300" rx="24" fill="url(#bar)"/>
   <text x="540" y="1640" class="k" font-size="48" font-weight="900" fill="#1C1208" text-anchor="middle">DEVIS EN 2 MINUTES</text>
-  <text x="540" y="1715" class="k" font-size="30" font-weight="700" fill="#1C1208" text-anchor="middle">🔗 [LIEN_DEVIS]</text>
+  <text x="540" y="1715" class="k" font-size="30" font-weight="700" fill="#1C1208" text-anchor="middle">🔗 kalefleh.vercel.app</text>
   <text x="540" y="1785" class="b" font-size="30" font-weight="700" fill="#1C1208" text-anchor="middle">📞 WhatsApp : [NUMERO_WHATSAPP]</text>
 </svg>
