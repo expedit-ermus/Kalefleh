@@ -10,9 +10,9 @@ vêtements, cosmétiques réglementés, perruques, alimentaire.
 | Fichier | Rôle |
 |---|---|
 | `server.js` | Serveur Node/Express : page web + base de fiches clients (JSON) + export CSV |
-| `public/index.html` | Landing page de devis (formulaire en 4 étapes, tarifs, FAQ) |
+| `public/index.html` | Landing one-page / funnel de conversion (pain → solution → preuve → étapes → tarifs → devis express → FAQ) |
 | `public/style.css` | Styles (identité visuelle orange / noir) |
-| `public/app.js` | Navigation par étapes, calculs du devis, envoi de la fiche |
+| `public/app.js` | Devis express : estimation live du budget, envoi de la fiche |
 | `public/admin.html` | Espace admin : consulter / exporter les fiches clients |
 | `data/fiche-clients.json` | Base de données (créée automatiquement) |
 | `posts-lancement.md` | **Tous les posts de lancement** (Facebook, Instagram, TikTok, Stories, Ads) |
