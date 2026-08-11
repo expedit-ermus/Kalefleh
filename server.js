@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
+const { put, get } = require("@vercel/blob");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,6 +10,8 @@ const DB_FILE = path.join(DATA_DIR, "fiche-clients.json");
 const ADMINS = process.env.KALEFLEH_ADMINS
   ? process.env.KALEFLEH_ADMINS.split(",").map((s) => s.trim().toUpperCase()).filter(Boolean)
   : ["ALJABIR", "KADJA", "ADMIN"];
+const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
+const BLOB_PATH = "kalefleh/fiche-clients.json";
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -16,7 +19,19 @@ app.use(express.static(path.join(__dirname, "public")));
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(DB_FILE)) fs.writeFileSync(DB_FILE, "[]");
 
-function readDb() {
+async function readDb() {
+  if (BLOB_TOKEN) {
+    try {
+      const result = await get(BLOB_PATH, { token: BLOB_TOKEN, access: "private" });
+      if (!result) return [];
+      const chunks = [];
+      for await (const c of result.stream) chunks.push(c);
+      const text = Buffer.concat(chunks).toString("utf8");
+      return text.trim() ? JSON.parse(text) : [];
+    } catch {
+      return [];
+    }
+  }
   try {
     return JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
   } catch {
@@ -24,8 +39,19 @@ function readDb() {
   }
 }
 
-function writeDb(data) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+async function writeDb(data) {
+  const json = JSON.stringify(data, null, 2);
+  if (BLOB_TOKEN) {
+    await put(BLOB_PATH, json, {
+      token: BLOB_TOKEN,
+      access: "private",
+      contentType: "application/json",
+      addRandomSuffix: false,
+      allowOverwrite: true
+    });
+    return;
+  }
+  fs.writeFileSync(DB_FILE, json);
 }
 
 function toCsv(rows) {
@@ -47,16 +73,16 @@ function toCsv(rows) {
   return lines.join("\r\n");
 }
 
-app.get("/api/fiches", (req, res) => {
+app.get("/api/fiches", async (req, res) => {
   const pass = req.query.pass || "";
   if (!ADMINS.includes(pass.toUpperCase())) {
     return res.status(401).json({ error: "Accès refusé : mot de passe admin requis." });
   }
-  const rows = readDb();
+  const rows = await readDb();
   res.json({ count: rows.length, fiches: rows.slice().reverse() });
 });
 
-app.post("/api/fiches", (req, res) => {
+app.post("/api/fiches", async (req, res) => {
   const b = req.body || {};
   const nomClient = String(b.nomClient || b.nom_client || "").trim();
   const telephone = String(b.telephone || "").trim();
@@ -84,29 +110,37 @@ app.post("/api/fiches", (req, res) => {
     commentaire: String(b.commentaire || "").trim(),
     statut: "NOUVEAU"
   };
-  const db = readDb();
+  const db = await readDb();
   db.push(fiche);
-  writeDb(db);
-  res.status(201).json({ ok: true, fiche });
+  try {
+    await writeDb(db);
+    res.status(201).json({ ok: true, fiche });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
 });
 
-app.patch("/api/fiches/:ref", (req, res) => {
+app.patch("/api/fiches/:ref", async (req, res) => {
   const pass = (req.query.pass || req.body.pass || "").toString().toUpperCase();
   if (!ADMINS.includes(pass)) return res.status(401).json({ error: "Accès refusé." });
-  const db = readDb();
+  const db = await readDb();
   const idx = db.findIndex((f) => f.ref === req.params.ref);
   if (idx === -1) return res.status(404).json({ error: "Fiche introuvable." });
   db[idx] = { ...db[idx], ...req.body, ref: db[idx].ref, date: db[idx].date };
-  writeDb(db);
-  res.json({ ok: true, fiche: db[idx] });
+  try {
+    await writeDb(db);
+    res.json({ ok: true, fiche: db[idx] });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
 });
 
-app.get("/api/export/fiches.csv", (req, res) => {
+app.get("/api/export/fiches.csv", async (req, res) => {
   const pass = req.query.pass || "";
   if (!ADMINS.includes(pass.toUpperCase())) {
     return res.status(401).json({ error: "Accès refusé." });
   }
-  const csv = toCsv(readDb());
+  const csv = toCsv(await readDb());
   res.header("Content-Type", "text/csv; charset=utf-8");
   res.header("Content-Disposition", 'attachment; filename="kalefleh-fiches-clients.csv"');
   res.send("\uFEFF" + csv);
@@ -115,7 +149,7 @@ app.get("/api/export/fiches.csv", (req, res) => {
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`KALEFLEH est en ligne sur http://localhost:${PORT}`);
-    console.log(`Base de fiches clients : ${DB_FILE}`);
+    console.log(`Base de fiches clients : ${BLOB_TOKEN ? "Vercel Blob (persistant)" : DB_FILE}`);
   });
 }
 
