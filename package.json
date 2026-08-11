@@ -6,7 +6,13 @@
   "type": "commonjs",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "visuels:svg": "node tools/generate-carousel.mjs && node tools/svg-to-png.mjs",
+    "visuels:png": "node tools/svg-to-png.mjs",
+    "favicons": "node tools/make-favicons.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
   },
   "engines": {
     "node": ">=18"

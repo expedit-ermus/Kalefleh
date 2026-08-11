@@ -11,9 +11,12 @@ vêtements, cosmétiques réglementés, perruques, alimentaire.
 |---|---|
 | `server.js` | Serveur Node/Express : page web + base de fiches clients (JSON) + export CSV |
 | `public/index.html` | Landing one-page / funnel de conversion (pain → solution → preuve → étapes → tarifs → devis express → FAQ) |
-| `public/style.css` | Styles (identité visuelle orange / noir) |
+| `public/style.css` | Styles (identité visuelle charte : Ambre `#E86A00`, Charbon `#1C1208`, Crème `#F7F1E7`) |
 | `public/app.js` | Devis express : estimation live du budget, envoi de la fiche |
 | `public/admin.html` | Espace admin : consulter / exporter les fiches clients |
+| `docs/charte-graphique.md` | **Charte graphique v1.0** : couleurs, typo (Montserrat/Inter), composants, visuels |
+| `public/affiche-carre.png`, `affiche-story.png`, `carrousel/*` | Visuels de lancement (posts FB/IG 1080×1080, story 1080×1920) |
+| `public/favicon.svg`, `favicon.png`, `apple-touch-icon.png` | Logo « K » (Ambre sur Charbon) + icônes navigateur/mobile |
 | `data/fiche-clients.json` | Base de données (créée automatiquement) |
 | `posts-lancement.md` | **Tous les posts de lancement** (Facebook, Instagram, TikTok, Stories, Ads) |
 
@@ -55,9 +58,20 @@ Alternative : **Railway.app** ou **Vercel** (Vercel nécessite une petite config
 
 ## 📁 Mettre à jour les numéros
 
-Avant de partager les posts : remplace dans `posts-lancement.md` et dans `public/index.html` :
+Avant de partager les posts : remplace dans `posts-lancement.md`, `public/index.html` et les SVG (`.svg`) :
 - `[NUMERO_WHATSAPP]` / `[VOTRE NUMERO]` → ton numéro WhatsApp réel
 - `[LIEN_DEVIS]` → l'adresse de ta page une fois en ligne
+
+## 🎨 Régénérer les visuels de marque
+
+Après édition des SVG ou du carrousel (`tools/generate-carousel.mjs`), reconvertir en PNG :
+
+```bash
+cd kalefleh
+npm run visuels:svg   # régénère SVG carrousel + tous les PNG (nécessite playwright installé)
+```
+
+Le rendu utilise Chromium/Playwright pour charger les polices Google Fonts (Montserrat/Inter).
 
 ## 🛠️ API (facultatif)
 

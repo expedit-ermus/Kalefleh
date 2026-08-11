@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KALEFLEH — Espace Admin</title>
+  <link rel="icon" type="image/png" href="favicon-32.png" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="style.css" />
   <style>
     .admin-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; margin-bottom: 16px; }
@@ -18,7 +20,7 @@
       cursor: pointer;
       height: 44px;
     }
-    .btn-secondary:hover { background: #333; }
+    .btn-secondary:hover { background: #3A2A17; }
     .fiche-card {
       border: 1px solid #e5d7c5;
       border-radius: 12px;
@@ -30,7 +32,7 @@
     .ref { font-weight: 800; color: var(--primary-dark); }
     .date { color: var(--muted); font-size: .85rem; }
     .badge {
-      background: #ffd9a8;
+      background: var(--amber-tint);
       color: #7a3d00;
       font-size: .72rem;
       font-weight: 800;
@@ -41,7 +43,7 @@
     .fiche-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 18px; margin-top: 10px; font-size: .92rem; }
     .fiche-grid div span { color: var(--muted); }
     .types { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
-    .type-tag { background: var(--dark); color: #ffcf9e; padding: 2px 10px; border-radius: 20px; font-size: .8rem; font-weight: 700; }
+    .type-tag { background: var(--dark); color: var(--amber-light); padding: 2px 10px; border-radius: 20px; font-size: .8rem; font-weight: 700; }
     .empty { text-align: center; color: var(--muted); padding: 30px 0; }
     .login { max-width: 420px; margin: 40px auto; }
     @media (max-width: 640px) { .fiche-grid { grid-template-columns: 1fr; } }
