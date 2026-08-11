@@ -273,6 +273,11 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 
 .hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; opacity: 0; }
 
+/* Accessibilité : focus visible */
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+a:focus-visible, button:focus-visible { border-radius: 6px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline-color: var(--primary); }
+
 /* Suivi de commande */
 .track { display: flex; justify-content: space-between; gap: 4px; margin: 20px 0 24px; }
 .step { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; font-size: .72rem; font-weight: 700; color: var(--muted); text-align: center; }

@@ -14,6 +14,10 @@
   <meta property="og:url" content="https://kalefleh.vercel.app/" />
   <meta property="og:image" content="https://kalefleh.vercel.app/affiche-carre.png" />
   <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="KALEFLEH — Tu commandes, on fait ta course au pays" />
+  <meta name="twitter:description" content="Vêtements, cosmétiques, perruques, alimentaire : commande depuis l'étranger ou au pays, KALEFLEH fait tes courses et expédie." />
+  <link rel="canonical" href="https://kalefleh.vercel.app/" />
   <meta name="theme-color" content="#1C1208" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -30,6 +34,39 @@
     "areaServed": ["Côte d'Ivoire", "Diaspora"],
     "address": { "@type": "PostalAddress", "addressCountry": "CI" },
     "priceRange": "FCFA"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Je suis à l'étranger, comment je paie ?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Wave, Orange Money, MTN MoMo, Moov, Western Union… Vous versez une avance pour lancer les courses, puis le solde à l'expédition." }
+      },
+      {
+        "@type": "Question",
+        "name": "Comment mes articles sont-ils expédiés ?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Par la compagnie de votre choix (ASJ, Coris, Karwa, La Poste…) ou via KALEFLEH — dans ce cas on vous propose le meilleur tarif." }
+      },
+      {
+        "@type": "Question",
+        "name": "J'aurai une preuve d'achat ?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Oui : photos + reçus à chaque étape, avant toute expédition. Rien ne part sans votre accord." }
+      },
+      {
+        "@type": "Question",
+        "name": "Est-ce que ça marche aussi si je suis au pays ?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Oui. Vous commanderez, on fera la course, expédition en ville ou transport vers votre région." }
+      },
+      {
+        "@type": "Question",
+        "name": "Faites-vous les documents administratifs ?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Non. On ne fait que : vêtements, cosmétiques réglementés, perruques et alimentaire." }
+      }
+    ]
   }
   </script>
 </head>
@@ -150,10 +187,10 @@
           <h3>1. Qui sommes-nous en train d'aider ?</h3>
           <div class="grid">
             <label>Nom &amp; prénom
-              <input type="text" id="nomClient" name="nomClient" placeholder="Ex : Aya Kouassi" required />
+              <input type="text" id="nomClient" name="nomClient" placeholder="Ex : Aya Kouassi" required aria-required="true" />
             </label>
             <label>Téléphone / WhatsApp
-              <input type="tel" id="telephone" name="telephone" placeholder="+225 07 07 07 07 07" required />
+              <input type="tel" id="telephone" name="telephone" placeholder="+225 07 07 07 07 07" required aria-required="true" />
             </label>
             <label>Pays de résidence
               <input type="text" id="pays" name="pays" placeholder="France, Canada, USA, Côte d'Ivoire…" />
@@ -296,7 +333,6 @@
       </div>
       <div>
         <strong>Contact</strong>
-        <a href="https://wa.me/" data-placeholder="[NUMERO_WHATSAPP]">WhatsApp : [NUMERO]</a>
         <a href="mailto:kalefleh.shop@gmail.com">kalefleh.shop@gmail.com</a>
         <span>Côte d'Ivoire 🇨🇮 · Diaspora 🌍</span>
       </div>
