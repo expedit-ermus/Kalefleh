@@ -69,7 +69,7 @@ async function sendNotification(fiche) {
   const lines = [
     `Nouvelle demande de devis — ${fiche.ref}`,
     "",
-    `Client : ${fiche.nom_client} (${fiche.telephone})`,
+    `Client : ${fiche.nom_client} (${fiche.telephone}${fiche.email_client ? " · " + fiche.email_client : ""})`,
     `Localisation : ${fiche.pays} — ${fiche.ville}`,
     `Courses : ${fiche.types_courses.join(", ") || "—"}`,
     `Budget : ${money(fiche.budget_fcfa)} · Prestation : ${money(fiche.prestation_fcfa)}`,
@@ -104,7 +104,7 @@ async function sendNotification(fiche) {
 
 function toCsv(rows) {
   const headers = [
-    "ref", "date", "nom_client", "telephone", "whatsapp", "pays", "ville",
+    "ref", "date", "nom_client", "telephone", "email_client", "whatsapp", "pays", "ville",
     "types_courses", "details_course", "delai_souhaite", "budget_fcfa", "prestation_fcfa",
     "expedition_fcfa", "total_estime_fcfa", "avance_fcfa", "paiement",
     "compagnie_expedition", "adresse_livraison", "commentaire", "statut"
@@ -142,6 +142,7 @@ app.post("/api/fiches", async (req, res) => {
     date: new Date().toISOString(),
     nom_client: nomClient,
     telephone,
+    email_client: String(b.emailClient || "").trim(),
     whatsapp: String(b.whatsapp || telephone || "").trim(),
     pays: String(b.pays || "Côte d'Ivoire").trim(),
     ville: String(b.ville || "Abidjan").trim(),

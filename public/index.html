@@ -192,6 +192,9 @@
             <label>Téléphone / WhatsApp
               <input type="tel" id="telephone" name="telephone" placeholder="+225 07 07 07 07 07" required aria-required="true" />
             </label>
+            <label>Email (facultatif)
+              <input type="email" id="emailClient" name="emailClient" placeholder="tou@exemple.com" />
+            </label>
             <label>Pays de résidence
               <input type="text" id="pays" name="pays" placeholder="France, Canada, USA, Côte d'Ivoire…" />
             </label>
@@ -280,6 +283,7 @@
           <div class="recap" id="recap" hidden></div>
           <button type="submit" class="btn-primary btn-submit">Envoyer ma demande — devis gratuit</button>
           <p class="form-status" id="formStatus" role="status"></p>
+          <a id="suiviLink" class="btn-outline" href="#" style="display:none">📦 Suivre ma commande</a>
           <a id="followWhatsapp" class="btn-outline whatsapp-follow" href="#" target="_blank" rel="noopener" style="display:none">📱 Suivre sur WhatsApp</a>
           <p class="reassure">✅ Aucun paiement pour la demande · ⚠️ Pas de documents administratifs</p>
           <input type="hidden" id="whatsappAdmin" value="[NUMERO_WHATSAPP]" />

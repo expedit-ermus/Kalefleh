@@ -74,10 +74,12 @@
     var pays = document.getElementById("pays").value.trim();
     var livraison = document.getElementById("adresseLivraison").value.trim();
     var prestation = computePrestation();
+    var email = document.getElementById("emailClient").value.trim();
 
     var items = [];
     if (nom) items.push("<b>Client :</b> " + escHtml(nom) + (pays ? " (" + escHtml(pays) + ")" : ""));
     if (tel) items.push("<b>Téléphone :</b> " + escHtml(tel));
+    if (email) items.push("<b>Email :</b> " + escHtml(email));
     if (types.length) items.push("<b>Courses :</b> " + types.map(escHtml).join(", "));
     if (budgetValue > 0) items.push("<b>Budget :</b> " + money(budgetValue));
     if (prestation) items.push("<b>Prestation :</b> " + money(prestation));
@@ -88,7 +90,7 @@
     recap.innerHTML = items.map(function (i) { return "<div>" + i + "</div>"; }).join("");
   }
 
-  ["nomClient", "telephone", "pays", "ville", "adresseLivraison"].forEach(function (id) {
+  ["nomClient", "telephone", "emailClient", "pays", "ville", "adresseLivraison"].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) el.addEventListener("input", updateRecap);
   });
@@ -155,6 +157,7 @@
       nomClient: nom,
       telephone: tel,
       whatsapp: tel,
+      emailClient: document.getElementById("emailClient").value.trim(),
       pays: document.getElementById("pays").value,
       ville: document.getElementById("ville").value,
       typesCourses: types,
@@ -186,6 +189,13 @@
         msg += " Envoyez-nous votre réf sur WhatsApp pour accélérer 👇";
       }
       setStatus(msg, true);
+
+      // Lien de suivi prérempli (toujours visible)
+      var suiviLink = document.getElementById("suiviLink");
+      if (suiviLink) {
+        suiviLink.href = "suivi.html?ref=" + encodeURIComponent(data.fiche.ref);
+        suiviLink.style.display = "inline-block";
+      }
 
       // Bouton WhatsApp de suivi (si numéro admin renseigné)
       var followBtn = document.getElementById("followWhatsapp");

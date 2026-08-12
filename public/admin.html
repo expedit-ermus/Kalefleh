@@ -133,6 +133,7 @@
         <div class="new-grid">
           <label>Nom &amp; prénom <input type="text" id="nNom" required /></label>
           <label>Téléphone / WhatsApp <input type="tel" id="nTel" placeholder="+225 07 07 07 07 07" required /></label>
+          <label>Email (facultatif) <input type="email" id="nEmail" placeholder="tou@exemple.com" /></label>
           <label>Pays <input type="text" id="nPays" placeholder="Côte d'Ivoire" /></label>
           <label>Ville <input type="text" id="nVille" placeholder="Abidjan" /></label>
         </div>
@@ -274,7 +275,7 @@
           '<div class="types">' + f.types_courses.map(function (t) { return '<span class="type-tag">' + esc(t) + "</span>"; }).join("") + "</div>" +
           '<div class="fiche-grid">' +
           cell("Client", f.nom_client) + cell("Téléphone", f.telephone) +
-          cell("WhatsApp", f.whatsapp) + cell("Pays / Ville", f.pays + " — " + f.ville) +
+          cell("WhatsApp", f.whatsapp) + cell("Email", f.email_client) + cell("Pays / Ville", f.pays + " — " + f.ville) +
           cell("Budget", money(f.budget_fcfa)) + cell("Prestation", money(f.prestation_fcfa)) +
           cell("Expédition", money(f.expedition_fcfa)) + cell("Total estimé", money(f.total_estime_fcfa)) +
           cell("Avance", money(f.avance_fcfa)) + cell("Paiement", f.paiement) +
@@ -372,7 +373,7 @@
 
     var newFicheBox = document.getElementById("newFicheBox");
     function resetNewForm() {
-      ["nNom", "nTel", "nPays", "nVille", "nBudget", "nAvance", "nPrestation", "nAdresse", "nCommentaire"].forEach(function (id) {
+      ["nNom", "nTel", "nEmail", "nPays", "nVille", "nBudget", "nAvance", "nPrestation", "nAdresse", "nCommentaire"].forEach(function (id) {
         var el = document.getElementById(id);
         if (el) el.value = "";
       });
@@ -401,6 +402,7 @@
         nomClient: nom,
         telephone: tel,
         whatsapp: tel,
+        emailClient: document.getElementById("nEmail").value.trim() || "",
         pays: document.getElementById("nPays").value.trim() || "Côte d'Ivoire",
         ville: document.getElementById("nVille").value.trim() || "Abidjan",
         typesCourses: types,
@@ -465,6 +467,11 @@
 
     if (pass) showPanel();
     else document.getElementById("passInput").focus();
+
+    // Auto-refresh : nouvelles fiches visibles sans recharger
+    setInterval(function () {
+      if (!panelBox.style.display || panelBox.style.display !== "none") loadFiches();
+    }, 45000);
   </script>
 </body>
 </html>

@@ -104,6 +104,10 @@
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
       var ref = input.value.trim().toUpperCase();
+      await lookup(ref);
+    });
+
+    async function lookup(ref) {
       status.className = "form-status";
       status.textContent = "Recherche...";
       var box = document.getElementById("resultBox");
@@ -133,7 +137,16 @@
         status.className = "form-status err";
         status.textContent = "Aucune commande trouvée avec cette référence. Vérifie et réessaie.";
       }
-    });
+    }
+
+    // Suivi direct via ?ref=KF-XXXX
+    (function () {
+      var m = (location.search || "").match(/[?&]ref=([^&]+)/);
+      if (m) {
+        input.value = decodeURIComponent(m[1]).toUpperCase();
+        lookup(input.value);
+      }
+    })();
   </script>
 </body>
 </html>
