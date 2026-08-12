@@ -285,6 +285,11 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline-colo
 .step.done { color: var(--ok); }
 .step.done .dot { background: var(--ok); color: #fff; }
 #rSummary strong { color: var(--primary-dark); }
+.suivi-client { margin-top: 10px; }
+#rSuiviList { display: grid; gap: 8px; }
+#rSuiviList .suivi-entry { background: #faf6ef; border-radius: 10px; padding: 10px 12px; }
+#rSuiviList .suivi-head { font-size: .75rem; color: var(--muted); font-weight: 600; }
+#rSuiviList .suivi-text { margin-top: 3px; }
 
 /* Submit */
 .form-cta { text-align: center; margin-top: 8px; }

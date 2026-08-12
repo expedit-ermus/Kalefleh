@@ -158,7 +158,8 @@ app.post("/api/fiches", async (req, res) => {
     compagnie_expedition: String(b.compagnieExpedition || "KALEFLEH s'occupe de tout").trim(),
     adresse_livraison: String(b.adresseLivraison || "").trim(),
     commentaire: String(b.commentaire || "").trim(),
-    statut: "NOUVEAU"
+    statut: "NOUVEAU",
+    suivi: [{ date: new Date().toISOString(), auteur: "système", texte: "Demande de devis reçue.", visibilite: "client" }]
   };
   const db = await readDb();
   db.push(fiche);
@@ -177,6 +178,7 @@ app.get("/api/fiches/:ref/statut", async (req, res) => {
   const db = await readDb();
   const f = db.find((x) => x.ref === ref);
   if (!f) return res.status(404).json({ ok: false, error: "Référence introuvable." });
+  const suivi = Array.isArray(f.suivi) ? f.suivi.filter((e) => e.visibilite === "client") : [];
   res.json({
     ok: true,
     ref: f.ref,
@@ -188,9 +190,13 @@ app.get("/api/fiches/:ref/statut", async (req, res) => {
     types_courses: f.types_courses,
     delai_souhaite: f.delai_souhaite || "",
     total_estime_fcfa: f.total_estime_fcfa,
-    avance_fcfa: f.avance_fcfa
+    avance_fcfa: f.avance_fcfa,
+    suivi: suivi.slice(-20).reverse()
   });
 });
+
+const ALLOWED_PATCH = ["statut", "avance_fcfa", "total_estime_fcfa", "commentaire", "note", "notePublic"];
+const STATUT_ORDER = ["NOUVEAU", "CONTACTÉ", "EN COURS", "EXPÉDIÉ", "TERMINÉ"];
 
 app.patch("/api/fiches/:ref", async (req, res) => {
   const pass = (req.query.pass || req.body.pass || "").toString().toUpperCase();
@@ -198,10 +204,44 @@ app.patch("/api/fiches/:ref", async (req, res) => {
   const db = await readDb();
   const idx = db.findIndex((f) => f.ref === req.params.ref);
   if (idx === -1) return res.status(404).json({ error: "Fiche introuvable." });
-  db[idx] = { ...db[idx], ...req.body, ref: db[idx].ref, date: db[idx].date };
+  const fiche = db[idx];
+  fiche.suivi = Array.isArray(fiche.suivi) ? fiche.suivi : [];
+  const now = new Date().toISOString();
+
+  for (const key of ALLOWED_PATCH) {
+    if (key in req.body) {
+      if (key === "statut") {
+        const next = String(req.body.statut).trim().toUpperCase();
+        if (next !== fiche.statut && STATUT_ORDER.indexOf(next) !== -1) {
+          fiche.suivi.push({
+            date: now,
+            auteur: "système",
+            texte: `Statut : ${fiche.statut} → ${next}`,
+            visibilite: "client"
+          });
+          fiche.statut = next;
+        }
+      } else if (key === "note") {
+        const texte = String(req.body.note).trim();
+        if (texte) {
+          fiche.suivi.push({
+            date: now,
+            auteur: "admin",
+            texte,
+            visibilite: req.body.notePublic ? "client" : "interne"
+          });
+        }
+      } else if (key === "notePublic") {
+        // consommé avec note, ignoré séparément
+      } else {
+        const v = req.body[key];
+        fiche[key] = key.endsWith("_fcfa") ? (Number(v) || 0) : String(v || "");
+      }
+    }
+  }
   try {
     await writeDb(db);
-    res.json({ ok: true, fiche: db[idx] });
+    res.json({ ok: true, fiche });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
   }

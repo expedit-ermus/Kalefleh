@@ -70,6 +70,19 @@
     .fiche-edit input, .fiche-edit textarea { padding: 8px 10px; border: 1px solid #e5d7c5; border-radius: 8px; font-size: .92rem; }
     .fiche-edit textarea { grid-column: 1 / -1; resize: vertical; }
     .fiche-edit .btn-save { justify-self: start; }
+    .fiche-suivi { margin-top: 10px; padding: 12px; background: #fff; border: 1px solid #e5d7c5; border-radius: 10px; }
+    .suivi-list { display: grid; gap: 8px; margin-bottom: 10px; max-height: 260px; overflow-y: auto; }
+    .suivi-entry { background: #faf6ef; border-radius: 8px; padding: 8px 10px; font-size: .88rem; }
+    .suivi-head { font-size: .75rem; color: var(--muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .suivi-text { margin-top: 3px; }
+    .suivi-badge { font-size: .66rem; font-weight: 800; padding: 1px 7px; border-radius: 10px; text-transform: uppercase; }
+    .suivi-badge.vis-client { background: #d4edda; color: #155724; }
+    .suivi-badge.vis-inte { background: #eee; color: #666; }
+    .suivi-empty { color: var(--muted); font-size: .85rem; text-align: center; }
+    .suivi-note { display: flex; flex-direction: column; gap: 8px; }
+    .suivi-note textarea { padding: 8px 10px; border: 1px solid #e5d7c5; border-radius: 8px; font-size: .92rem; resize: vertical; }
+    .suivi-note .suivi-vis { display: flex; align-items: center; gap: 6px; font-size: .82rem; color: var(--muted); }
+    .suivi-note .btn-save { align-self: flex-start; }
     .stats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
     .stat-chip { background: var(--dark); color: #fff; border-radius: 12px; padding: 8px 14px; display: flex; flex-direction: column; line-height: 1.2; }
     .stat-chip b { font-size: 1.05rem; color: var(--amber-light); }
@@ -288,6 +301,7 @@
             return '<option' + (s === f.statut ? " selected" : "") + '>' + esc(s) + '</option>';
           }).join("") + "</select></label>" +
           (f.whatsapp ? '<a class="wa-link" href="https://wa.me/' + f.whatsapp.replace(/\D/g, "") + '" target="_blank" rel="noopener">💬 WhatsApp</a>' : "") +
+          '<button class="btn-mini" data-action="hist" data-ref="' + esc(f.ref) + '">🕘 Historique</button>' +
           '<button class="btn-mini" data-action="edit" data-ref="' + esc(f.ref) + '">✏️ Modifier</button>' +
           '<button class="btn-mini btn-danger" data-action="delete" data-ref="' + esc(f.ref) + '">🗑️</button>' +
           "</div>" +
@@ -296,7 +310,15 @@
           '<label>Total estimé (FCFA)<input type="number" class="e-total" min="0" value="' + (Number(f.total_estime_fcfa) || 0) + '" /></label>' +
           '<label>Commentaire<textarea class="e-com" rows="2">' + esc(f.commentaire || "") + '</textarea></label>' +
           '<button class="btn-mini btn-save" data-ref="' + esc(f.ref) + '">💾 Enregistrer</button>' +
-          "</div>";
+          "</div>" +
+          '<div class="fiche-suivi" id="suivi-' + esc(f.ref) + '" hidden>' +
+          '<div class="suivi-list" data-count="' + (Array.isArray(f.suivi) ? f.suivi.length : 0) + '">' +
+          suiviEntriesHtml(f) + "</div>" +
+          '<div class="suivi-note">' +
+          '<textarea class="n-note" rows="2" placeholder="Relance, accord, photo envoyée…"></textarea>' +
+          '<label class="suivi-vis"><input type="checkbox" class="n-public" /> Visible par le client</label>' +
+          '<button class="btn-mini btn-save" data-action="note" data-ref="' + esc(f.ref) + '">➕ Ajouter</button>' +
+          "</div></div>";
         holder.appendChild(el);
 
         var sel = el.querySelector('select[data-ref]');
@@ -305,6 +327,18 @@
         el.querySelector('[data-action="edit"]').addEventListener("click", function () {
           var box = document.getElementById("edit-" + f.ref);
           box.hidden = !box.hidden;
+        });
+
+        el.querySelector('[data-action="hist"]').addEventListener("click", function () {
+          var box = document.getElementById("suivi-" + f.ref);
+          box.hidden = !box.hidden;
+        });
+
+        el.querySelector('[data-action="note"]').addEventListener("click", function () {
+          var texte = el.querySelector(".n-note").value.trim();
+          if (!texte) { alert("Écris d'abord le message."); return; }
+          var payload = { note: texte, notePublic: el.querySelector(".n-public").checked };
+          addNote(f.ref, payload, el);
         });
 
         el.querySelector('[data-action="delete"]').addEventListener("click", function () {
@@ -338,6 +372,31 @@
         alert("Erreur changement de statut : " + err.message);
         loadFiches();
       }
+    }
+
+    async function addNote(ref, payload, el) {
+      try {
+        var res = await fetch("/api/fiches/" + encodeURIComponent(ref) + "?pass=" + encodeURIComponent(pass), {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Erreur.");
+        loadFiches();
+      } catch (err) {
+        alert("Erreur relance : " + err.message);
+      }
+    }
+
+    function suiviEntriesHtml(f) {
+      var log = Array.isArray(f.suivi) ? f.suivi : [];
+      if (!log.length) return '<p class="suivi-empty">Aucun historique.</p>';
+      return log.slice().reverse().map(function (e) {
+        var who = e.auteur === "système" ? "⚙️ système" : (e.auteur === "admin" ? "🛠️ admin" : "👤 client");
+        var vis = e.visibilite === "client" ? '<span class="suivi-badge vis-client">client</span>' : '<span class="suivi-badge vis-inte">interne</span>';
+        return '<div class="suivi-entry"><div class="suivi-head">' + who + " · " + vis + " · <span class='date'>" + esc(new Date(e.date).toLocaleString("fr-FR")) + '</span></div><div class="suivi-text">' + esc(e.texte) + "</div></div>";
+      }).join("");
     }
 
     async function updateFiche(ref, payload) {
