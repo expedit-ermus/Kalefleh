@@ -72,6 +72,16 @@
         <div id="rSuiviList"></div>
       </div>
 
+      <div class="msg-form" id="rMsgBox" hidden>
+        <h3 style="font-size:1rem;margin:18px 0 10px">✉️ Écrire à KALEFLEH</h3>
+        <textarea id="cMsg" rows="2" maxlength="500" placeholder="Une question, une précision, une photo à décrire ? On te répond vite."></textarea>
+        <input type="text" id="cHp" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp-field" />
+        <div class="msg-actions">
+          <button class="btn-primary" id="btnMsg">Envoyer le message</button>
+          <span id="msgStatus" class="form-status" role="status"></span>
+        </div>
+      </div>
+
       <p class="totals-note" style="margin-top:12px">Une question ? Écris-nous, on te répond sur WhatsApp ou par email.</p>
     </section>
   </main>
@@ -128,6 +138,7 @@
         status.textContent = "Référence invalide. Format attendu : KF-XXXXXXXX.";
         return;
       }
+      currentRef = ref;
       try {
         var res = await fetch("/api/fiches/" + encodeURIComponent(ref) + "/statut");
         var data = await res.json();
@@ -148,19 +159,51 @@
         var entries = data.suivi || [];
         if (entries.length) {
           document.getElementById("rSuiviList").innerHTML = entries.map(function (e) {
-            return '<div class="suivi-entry"><div class="suivi-head">KALEFLEH · ' + new Date(e.date).toLocaleString("fr-FR") + '</div><div class="suivi-text">' + esc(e.texte) + "</div></div>";
+            var who = e.auteur === "client" ? "Vous" : "KALEFLEH";
+            return '<div class="suivi-entry"><div class="suivi-head">' + who + " · " + new Date(e.date).toLocaleString("fr-FR") + '</div><div class="suivi-text">' + esc(e.texte) + "</div></div>";
           }).join("");
           suiviBox.hidden = false;
         } else {
           suiviBox.hidden = true;
         }
 
+        document.getElementById("rMsgBox").hidden = false;
+        document.getElementById("msgStatus").textContent = "";
         box.hidden = false;
       } catch (err) {
         status.className = "form-status err";
         status.textContent = "Aucune commande trouvée avec cette référence. Vérifie et réessaie.";
       }
     }
+
+    // Envoi d'un message client
+    var currentRef = "";
+    var cMsgBox = document.getElementById("cMsg");
+    var cHpBox = document.getElementById("cHp");
+    var msgSt = document.getElementById("msgStatus");
+    document.getElementById("btnMsg").addEventListener("click", function () {
+      var texte = cMsgBox.value.trim();
+      if (!currentRef || !texte) return;
+      msgSt.className = "form-status";
+      msgSt.textContent = "Envoi...";
+      fetch("/api/fiches/" + encodeURIComponent(currentRef) + "/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: texte, website: cHpBox.value })
+      }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) {
+          if (!res.ok) throw new Error(res.d.error || "Erreur.");
+          cMsgBox.value = "";
+          cHpBox.value = "";
+          msgSt.className = "form-status ok";
+          msgSt.textContent = "Message envoyé ✓ KALEFLEH te répond bientôt.";
+          lookup(currentRef);
+        })
+        .catch(function (err) {
+          msgSt.className = "form-status err";
+          msgSt.textContent = "Échec : " + err.message;
+        });
+    });
 
     // Suivi direct via ?ref=KF-XXXX
     (function () {

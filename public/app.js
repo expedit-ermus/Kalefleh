@@ -95,6 +95,51 @@
     if (el) el.addEventListener("input", updateRecap);
   });
 
+  // ---- Pré-remplissage via URL (?type=vêtements,perruques&budget=100000&pays=France&ville=Paris) ----
+  (function prefillFromUrl() {
+    var q = {};
+    (window.location.search || "").replace(/^\?/, "").split("&").forEach(function (kv) {
+      var p = kv.split("=");
+      if (p[0]) q[decodeURIComponent(p[0])] = decodeURIComponent(p[1] || "");
+    });
+    if (Object.keys(q).length === 0) return;
+
+    var requestedTypes = (q.type || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+    if (requestedTypes.length) {
+      typeInputs.forEach(function (c) {
+        c.checked = requestedTypes.indexOf(c.value) !== -1;
+      });
+      updateTotals();
+      updateRecap();
+    }
+    if (q.budget) {
+      var b = Number(q.budget) || 0;
+      var quick = chips.find(function (c) { return c.checked; });
+      if (quick) quick.checked = false;
+      if (b > 0) {
+        var exact = chips.find(function (c) { return c.value === "custom"; });
+        if (exact) {
+          exact.checked = true;
+          customBudgetWrap.hidden = false;
+          if (budgetInput) budgetInput.value = b;
+          budgetValue = b;
+          updateTotals();
+        }
+      }
+    }
+    var setters = { pays: "pays", ville: "ville", nom: "nomClient", tel: "telephone", email: "emailClient" };
+    Object.keys(setters).forEach(function (k) {
+      var el = document.getElementById(setters[k]);
+      if (q[k] && el) el.value = q[k];
+    });
+    updateRecap();
+
+    var target = document.getElementById("devis");
+    if (target && q.go !== "no" && !/^#/.test(window.location.hash)) {
+      setTimeout(function () { target.scrollIntoView({ behavior: "smooth", block: "start" }); }, 100);
+    }
+  })();
+
   function escHtml(s) {
     return String(s == null ? "" : s)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")

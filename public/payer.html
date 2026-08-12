@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payer mon avance en ligne — KALEFLEH</title>
+  <meta name="description" content="Déclare ton avance en ligne (Wave, Orange Money, MTN MoMo, Moov) pour lancer tes courses au pays. Trace ajoutée à ton suivi de commande." />
+    <link rel="icon" type="image/png" href="favicon-32.png" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Payer mon avance en ligne — KALEFLEH" />
+  <meta property="og:description" content="Déclare ton avance en ligne (Wave, Orange Money, MTN MoMo, Moov) pour lancer tes courses au pays. Trace ajoutée à ton suivi de commande." />
+  <meta property="og:url" content="https://kalefleh.vercel.app/payer.html" />
+  <meta property="og:image" content="https://kalefleh.vercel.app/affiche-carre.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <link rel="canonical" href="https://kalefleh.vercel.app/payer.html" />
+  <meta name="theme-color" content="#1C1208" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="navbar-logo">KALEFLEH</a>
+  <div class="navbar-links">
+    <a href="tarifs.html" class="navbar-nowrap">Tarifs</a>
+    <a href="suivi.html">Suivi</a>
+    <a href="faq.html">FAQ</a>
+    <a href="payer.html" class="navbar-nowrap">Payer</a>
+    <a href="contact.html">Contact</a>
+    <a href="index.html#devis" class="btn-nav">Devis gratuit</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+    <header class="page-hero">
+    <span class="niche-hero-ic">💳</span>
+    <h1>Payer mon avance<br /><span>lancer mes courses</span></h1>
+    <p>Déclare ton avance en ligne : on prépare tes courses dès réception, puis on te le confirme. Tu reçois une trace dans ton suivi.</p>
+    
+    <div class="crumbs"><a href="index.html">Accueil</a> · <span>Payer</span></div>
+  </header>
+  <section class="card form-card">
+    <div class="form-head">
+      <h2>Déclarer mon avance</h2>
+      <p>Réf de commande (KF-…) · montant · moyen de paiement. 30 secondes.</p>
+    </div>
+    <form id="payForm" novalidate>
+      <input type="text" id="payWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp-field" />
+      <div class="form-block">
+        <h3>1. Ta commande</h3>
+        <div class="grid">
+          <label>Référence (KF-…)
+            <input type="text" id="payRef" placeholder="KF-XXXXXXXX" required />
+          </label>
+          <label>Montant de l'avance (FCFA)
+            <input type="number" id="payMontant" min="1000" step="500" placeholder="Ex : 25 000" required />
+          </label>
+        </div>
+      </div>
+      <div class="form-block">
+        <h3>2. Moyen de paiement envoyé</h3>
+        <div class="method-grid">
+          <label class="method"><input type="radio" name="methode" value="Wave" checked /> <span class="m-ic">🌊</span><div>Wave <span class="m-note">Transfert instantané</span></div></label>
+          <label class="method"><input type="radio" name="methode" value="Orange Money" /> <span class="m-ic">🟠</span><div>Orange Money <span class="m-note">Dispo tout CI</span></div></label>
+          <label class="method"><input type="radio" name="methode" value="MTN MoMo" /> <span class="m-ic">🟡</span><div>MTN MoMo <span class="m-note">Transfert mobile</span></div></label>
+          <label class="method"><input type="radio" name="methode" value="Moov Money" /> <span class="m-ic">🔵</span><div>Moov Money <span class="m-note">Transfert mobile</span></div></label>
+          <label class="method"><input type="radio" name="methode" value="Virement international (Western Union…)" /> <span class="m-ic">🌐</span><div>Virement international <span class="m-note">Western Union, OM/MTN diaspora…</span></div></label>
+        </div>
+      </div>
+      <div class="form-block">
+        <h3>3. Ton numéro (pour te confirmer)</h3>
+        <label class="full">Téléphone / WhatsApp
+          <input type="tel" id="payTel" placeholder="+225 07 07 07 07 07" />
+        </label>
+      </div>
+      <div class="form-cta">
+        <button type="submit" class="btn-primary btn-submit">Déclarer mon avance</button>
+        <p class="form-status" id="payStatus" role="status"></p>
+      </div>
+    </form>
+
+    <div id="payOk" hidden style="margin-top:18px">
+      <div class="instruction-box">
+        <h3>✅ Avance enregistrée</h3>
+        <p>Ton numéro de suivi reste le même : <strong id="okRef" class="big"></strong></p>
+        <p id="okResume" style="color:#ffe7c9"></p>
+        <p>On démarre tes <b>courses dès confirmation du virement</b>. Une trace de cette déclaration a été ajoutée à ton suivi.</p>
+        <a id="okWa" href="#" target="_blank" rel="noopener" class="copy" style="color:#fff">📱 Confirmer sur WhatsApp</a>
+        <a href="suivi.html" class="copy" style="color:#fff">📦 Voir mon suivi</a>
+      </div>
+      <input type="hidden" id="payWhatsappAdmin" value="[NUMERO_WHATSAPP]" />
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">KALEFLEH</div>
+      <p>Tu commandes, on fait ta course en Côte d'Ivoire. À l'étranger ou au pays, sans stress.</p>
+    </div>
+    <div>
+      <strong>Navigation</strong>
+      <a href="index.html#temoignages">Avis</a>
+      <a href="index.html#comment">Étapes</a>
+      <a href="tarifs.html">Tarifs &amp; prestation</a>
+      <a href="suivi.html">Suivi de commande</a>
+      <a href="faq.html">Questions fréquentes</a>
+      <a href="contact.html">Contact</a>
+      <a href="index.html#devis">Devis gratuit</a>
+    </div>
+    <div>
+      <strong>Nos courses</strong>
+      <a href="niche-vetements.html">Vêtements</a>
+      <a href="niche-cosmetiques.html">Cosmétiques</a>
+      <a href="niche-perruques.html">Perruques &amp; cheveux</a>
+      <a href="niche-alimentaire.html">Alimentaire</a>
+    </div>
+    <div>
+      <strong>Infos &amp; légal</strong>
+      <a href="livraison.html">Livraison &amp; expédition</a>
+      <a href="payer.html">Payer mon avance</a>
+      <a href="cgv.html">CGV</a>
+      <a href="mentions-legales.html">Mentions légales</a>
+    </div>
+    <div>
+      <strong>Contact</strong>
+      <a href="mailto:kalefleh.shop@gmail.com">kalefleh.shop@gmail.com</a>
+      <span>Côte d'Ivoire 🇨🇮 · Diaspora 🌍</span>
+    </div>
+  </div>
+  <p class="footer-copy">© <span id="year"></span> KALEFLEH — Tu commandes, on fait tes courses.</p>
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+<script>
+(function () {
+  var form = document.getElementById("payForm");
+  var status = document.getElementById("payStatus");
+  function setStatus(t, ok) { status.className = "form-status" + (ok ? " ok" : " err"); status.textContent = t; }
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var hp = document.getElementById("payWebsite");
+    if (hp && hp.value) { setStatus("Avance déclarée ✓", true); form.reset(); return; }
+    var ref = document.getElementById("payRef").value.trim().toUpperCase();
+    var montant = Number(document.getElementById("payMontant").value);
+    var methode = (form.querySelector('input[name="methode"]:checked') || {}).value || "";
+    var telephone = document.getElementById("payTel").value.trim();
+    if (!/^KF-[A-Z0-9]+$/.test(ref)) { setStatus("Référence invalide (format KF-XXXXXXXX).", false); return; }
+    if (!montant || montant < 1000) { setStatus("Indique un montant d'avance valide (min 1000 FCFA).", false); return; }
+    setStatus("Enregistrement...", false);
+    try {
+      var res = await fetch("/api/fiches/" + encodeURIComponent(ref) + "/paiement", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ montant: montant, methode: methode, telephone: telephone, website: hp ? hp.value : "" })
+      });
+      var data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Erreur.");
+      var waInput = document.getElementById("payWhatsappAdmin");
+      var wa = waInput && waInput.value;
+      if (wa && wa.indexOf("NUMERO") === -1) {
+        var msg = "Bonjour KALEFLEH 👋 Je viens de déclarer une avance de " + montant.toLocaleString("fr-FR") + " FCFA pour la commande " + ref + " via " + methode + ". Merci de confirmer.";
+        document.getElementById("okWa").href = "https://wa.me/" + wa.replace(/\D/g, "") + "?text=" + encodeURIComponent(msg);
+        document.getElementById("okWa").style.display = "inline-block";
+      } else {
+        document.getElementById("okWa").style.display = "none";
+      }
+      document.getElementById("okRef").textContent = ref;
+      document.getElementById("okResume").textContent = montant.toLocaleString("fr-FR") + " FCFA via " + methode + (telephone ? " — confirmation au " + telephone : "") + ".";
+      document.getElementById("payOk").hidden = false;
+      form.reset();
+      document.getElementById("payOk").scrollIntoView({ behavior: "smooth", block: "center" });
+    } catch (err) {
+      setStatus("Échec : " + err.message, false);
+    }
+  });
+  document.getElementById("payRef").focus();
+})();
+</script>
+</body>
+</html>

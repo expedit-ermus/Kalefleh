@@ -102,6 +102,33 @@ async function sendNotification(fiche) {
   }
 }
 
+async function sendClientMessageNotification(fiche, texte) {
+  if (!SMTP_READY) return;
+  try {
+    const transporter = nodemailer.createTransport({
+      host: SMTP.host,
+      port: SMTP.port,
+      secure: SMTP.port === 465,
+      auth: { user: SMTP.user, pass: SMTP.pass }
+    });
+    await transporter.sendMail({
+      from: `"KALEFLEH" <${SMTP.user}>`,
+      to: SMTP.to,
+      subject: `💬 Nouveau message client — ${fiche.ref} (${fiche.nom_client})`,
+      text: [
+        `Message de ${fiche.nom_client} sur la commande ${fiche.ref} :`,
+        "",
+        texte,
+        "",
+        `Téléphone : ${fiche.telephone}${fiche.email_client ? " · " + fiche.email_client : ""}`
+      ].join("\n")
+    });
+    console.log(`[notif] Email client message ${fiche.ref}`);
+  } catch (err) {
+    console.warn(`[notif] Échec email message ${fiche.ref} :`, err.message);
+  }
+}
+
 function toCsv(rows) {
   const headers = [
     "ref", "date", "nom_client", "telephone", "email_client", "whatsapp", "pays", "ville",
@@ -197,6 +224,53 @@ app.get("/api/fiches/:ref/statut", async (req, res) => {
 
 const ALLOWED_PATCH = ["statut", "avance_fcfa", "total_estime_fcfa", "commentaire", "note", "notePublic"];
 const STATUT_ORDER = ["NOUVEAU", "CONTACTÉ", "EN COURS", "EXPÉDIÉ", "TERMINÉ"];
+
+// Message du client (public) : ajouté au journal, alerte email admin
+app.post("/api/fiches/:ref/messages", async (req, res) => {
+  const ref = String(req.params.ref || "").trim().toUpperCase();
+  if ((req.body && req.body.website)) return res.status(200).json({ ok: true }); // honeypot
+  const texte = String((req.body && req.body.message) || "").trim().slice(0, 500);
+  if (!texte) return res.status(400).json({ ok: false, error: "Message vide." });
+  const db = await readDb();
+  const f = db.find((x) => x.ref === ref);
+  if (!f) return res.status(404).json({ ok: false, error: "Référence introuvable." });
+  f.suivi = Array.isArray(f.suivi) ? f.suivi : [];
+  f.suivi.push({ date: new Date().toISOString(), auteur: "client", texte, visibilite: "client" });
+  try {
+    await writeDb(db);
+    sendClientMessageNotification(f, texte);
+    res.status(201).json({ ok: true, fiche: f });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// Déclaration d'avance / paiement (public) : journal + alerte email admin
+const PAIEMENT_METHODES = ["Wave", "Orange Money", "MTN MoMo", "Moov Money", "Virement international (Western Union…)", "Espèces"];
+app.post("/api/fiches/:ref/paiement", async (req, res) => {
+  const ref = String(req.params.ref || "").trim().toUpperCase();
+  if (req.body && req.body.website) return res.status(200).json({ ok: true }); // honeypot
+  const montant = Number((req.body && req.body.montant) || 0);
+  const methode = String((req.body && req.body.methode) || "").trim();
+  const telephone = String((req.body && req.body.telephone) || "").trim();
+  if (!montant || montant <= 0) {
+    return res.status(400).json({ ok: false, error: "Indique un montant valide." });
+  }
+  const db = await readDb();
+  const f = db.find((x) => x.ref === ref);
+  if (!f) return res.status(404).json({ ok: false, error: "Référence introuvable." });
+  const methodeOk = PAIEMENT_METHODES.indexOf(methode) !== -1 ? methode : "Autre";
+  f.suivi = Array.isArray(f.suivi) ? f.suivi : [];
+  const texte = `💳 Avance déclarée : ${montant.toLocaleString("fr-FR")} FCFA via ${methodeOk}${telephone ? " (" + telephone + ")" : ""} — à confirmer par KALEFLEH.`;
+  f.suivi.push({ date: new Date().toISOString(), auteur: "client", texte, visibilite: "client" });
+  try {
+    await writeDb(db);
+    sendClientMessageNotification(f, texte);
+    res.status(201).json({ ok: true, ref: f.ref, montant, methode: methodeOk, telephone });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
 
 app.patch("/api/fiches/:ref", async (req, res) => {
   const pass = (req.query.pass || req.body.pass || "").toString().toUpperCase();
