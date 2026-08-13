@@ -22,8 +22,35 @@ const SMTP = {
 };
 const SMTP_READY = Boolean(SMTP.host && SMTP.user && SMTP.pass);
 
-app.use(express.json());
+app.use(express.json({ limit: "100kb" }));
 app.use(express.static(path.join(__dirname, "public")));
+
+// ---- Anti-abus : limiteur de requêtes simple, en mémoire (par IP + route) ----
+const RATE_BUCKETS = new Map();
+function rateLimit(key, max, windowMs) {
+  return function (req, res, next) {
+    const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "unknown").split(",")[0].trim();
+    const bucketKey = key + ":" + ip;
+    const now = Date.now();
+    const bucket = RATE_BUCKETS.get(bucketKey) || [];
+    const recent = bucket.filter((t) => now - t < windowMs);
+    if (recent.length >= max) {
+      return res.status(429).json({ ok: false, error: "Trop de requêtes, réessayez dans quelques minutes." });
+    }
+    recent.push(now);
+    RATE_BUCKETS.set(bucketKey, recent);
+    next();
+  };
+}
+// Nettoyage périodique pour éviter une fuite mémoire sur les instances qui restent chaudes
+setInterval(() => {
+  const now = Date.now();
+  for (const [k, arr] of RATE_BUCKETS) {
+    const recent = arr.filter((t) => now - t < 30 * 60 * 1000);
+    if (recent.length) RATE_BUCKETS.set(k, recent);
+    else RATE_BUCKETS.delete(k);
+  }
+}, 10 * 60 * 1000).unref?.();
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(DB_FILE)) fs.writeFileSync(DB_FILE, "[]");
@@ -148,7 +175,7 @@ function toCsv(rows) {
   return lines.join("\r\n");
 }
 
-app.get("/api/fiches", async (req, res) => {
+app.get("/api/fiches", rateLimit("admin-auth", 20, 10 * 60 * 1000), async (req, res) => {
   const pass = req.query.pass || "";
   if (!ADMINS.includes(pass.toUpperCase())) {
     return res.status(401).json({ error: "Accès refusé : mot de passe admin requis." });
@@ -157,10 +184,11 @@ app.get("/api/fiches", async (req, res) => {
   res.json({ count: rows.length, fiches: rows.slice().reverse() });
 });
 
-app.post("/api/fiches", async (req, res) => {
+app.post("/api/fiches", rateLimit("nouvelle-fiche", 5, 15 * 60 * 1000), async (req, res) => {
   const b = req.body || {};
-  const nomClient = String(b.nomClient || b.nom_client || "").trim();
-  const telephone = String(b.telephone || "").trim();
+  if (b.website) return res.status(200).json({ ok: true }); // honeypot : on feint le succès sans rien écrire
+  const nomClient = String(b.nomClient || b.nom_client || "").trim().slice(0, 120);
+  const telephone = String(b.telephone || "").trim().slice(0, 40);
   if (!nomClient && !telephone) {
     return res.status(400).json({ error: "Le nom du client ou le téléphone est obligatoire." });
   }
@@ -169,22 +197,22 @@ app.post("/api/fiches", async (req, res) => {
     date: new Date().toISOString(),
     nom_client: nomClient,
     telephone,
-    email_client: String(b.emailClient || "").trim(),
-    whatsapp: String(b.whatsapp || telephone || "").trim(),
-    pays: String(b.pays || "Côte d'Ivoire").trim(),
-    ville: String(b.ville || "Abidjan").trim(),
-    types_courses: Array.isArray(b.typesCourses) ? b.typesCourses : [],
-    details_course: String(b.detailsCourse || "").trim(),
-    delai_souhaite: String(b.delaiSouhaite || "").trim(),
+    email_client: String(b.emailClient || "").trim().slice(0, 160),
+    whatsapp: String(b.whatsapp || telephone || "").trim().slice(0, 40),
+    pays: String(b.pays || "Côte d'Ivoire").trim().slice(0, 80),
+    ville: String(b.ville || "Abidjan").trim().slice(0, 80),
+    types_courses: Array.isArray(b.typesCourses) ? b.typesCourses.map((t) => String(t).slice(0, 60)).slice(0, 10) : [],
+    details_course: String(b.detailsCourse || "").trim().slice(0, 2000),
+    delai_souhaite: String(b.delaiSouhaite || "").trim().slice(0, 120),
     budget_fcfa: Number(b.budgetFcfa) || 0,
     prestation_fcfa: Number(b.prestationFcfa) || 0,
     expedition_fcfa: Number(b.expeditionFcfa) || 0,
     total_estime_fcfa: Number(b.totalEstimeFcfa) || 0,
     avance_fcfa: Number(b.avanceFcfa) || 0,
-    paiement: String(b.paiement || "").trim(),
-    compagnie_expedition: String(b.compagnieExpedition || "KALEFLEH s'occupe de tout").trim(),
-    adresse_livraison: String(b.adresseLivraison || "").trim(),
-    commentaire: String(b.commentaire || "").trim(),
+    paiement: String(b.paiement || "").trim().slice(0, 80),
+    compagnie_expedition: String(b.compagnieExpedition || "KALEFLEH s'occupe de tout").trim().slice(0, 160),
+    adresse_livraison: String(b.adresseLivraison || "").trim().slice(0, 300),
+    commentaire: String(b.commentaire || "").trim().slice(0, 1000),
     statut: "NOUVEAU",
     suivi: [{ date: new Date().toISOString(), auteur: "système", texte: "Demande de devis reçue.", visibilite: "client" }]
   };
@@ -226,7 +254,7 @@ const ALLOWED_PATCH = ["statut", "avance_fcfa", "total_estime_fcfa", "commentair
 const STATUT_ORDER = ["NOUVEAU", "CONTACTÉ", "EN COURS", "EXPÉDIÉ", "TERMINÉ"];
 
 // Message du client (public) : ajouté au journal, alerte email admin
-app.post("/api/fiches/:ref/messages", async (req, res) => {
+app.post("/api/fiches/:ref/messages", rateLimit("message-client", 15, 15 * 60 * 1000), async (req, res) => {
   const ref = String(req.params.ref || "").trim().toUpperCase();
   if ((req.body && req.body.website)) return res.status(200).json({ ok: true }); // honeypot
   const texte = String((req.body && req.body.message) || "").trim().slice(0, 500);
@@ -247,7 +275,7 @@ app.post("/api/fiches/:ref/messages", async (req, res) => {
 
 // Déclaration d'avance / paiement (public) : journal + alerte email admin
 const PAIEMENT_METHODES = ["Wave", "Orange Money", "MTN MoMo", "Moov Money", "Virement international (Western Union…)", "Espèces"];
-app.post("/api/fiches/:ref/paiement", async (req, res) => {
+app.post("/api/fiches/:ref/paiement", rateLimit("declaration-paiement", 15, 15 * 60 * 1000), async (req, res) => {
   const ref = String(req.params.ref || "").trim().toUpperCase();
   if (req.body && req.body.website) return res.status(200).json({ ok: true }); // honeypot
   const montant = Number((req.body && req.body.montant) || 0);
@@ -272,7 +300,7 @@ app.post("/api/fiches/:ref/paiement", async (req, res) => {
   }
 });
 
-app.patch("/api/fiches/:ref", async (req, res) => {
+app.patch("/api/fiches/:ref", rateLimit("admin-auth", 20, 10 * 60 * 1000), async (req, res) => {
   const pass = (req.query.pass || req.body.pass || "").toString().toUpperCase();
   if (!ADMINS.includes(pass)) return res.status(401).json({ error: "Accès refusé." });
   const db = await readDb();
@@ -321,7 +349,7 @@ app.patch("/api/fiches/:ref", async (req, res) => {
   }
 });
 
-app.delete("/api/fiches/:ref", async (req, res) => {
+app.delete("/api/fiches/:ref", rateLimit("admin-auth", 20, 10 * 60 * 1000), async (req, res) => {
   const pass = (req.query.pass || req.body.pass || "").toString().toUpperCase();
   if (!ADMINS.includes(pass)) return res.status(401).json({ error: "Accès refusé." });
   const db = await readDb();
@@ -336,7 +364,7 @@ app.delete("/api/fiches/:ref", async (req, res) => {
   }
 });
 
-app.get("/api/export/fiches.csv", async (req, res) => {
+app.get("/api/export/fiches.csv", rateLimit("admin-auth", 20, 10 * 60 * 1000), async (req, res) => {
   const pass = req.query.pass || "";
   if (!ADMINS.includes(pass.toUpperCase())) {
     return res.status(401).json({ error: "Accès refusé." });
