@@ -11,6 +11,11 @@ const DB_FILE = path.join(DATA_DIR, "fiche-clients.json");
 const ADMINS = process.env.KALEFLEH_ADMINS
   ? process.env.KALEFLEH_ADMINS.split(",").map((s) => s.trim().toUpperCase()).filter(Boolean)
   : ["ALJABIR", "KADJA", "ADMIN"];
+// Mot de passe admin : header X-Admin-Pass en priorité (ne laisse pas de trace dans les logs d'URL),
+// query/body ?pass= gardé en compatibilité.
+function getAdminPass(req) {
+  return String(req.headers["x-admin-pass"] || req.query.pass || (req.body && req.body.pass) || "").trim();
+}
 const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
 const BLOB_PATH = "kalefleh/fiche-clients.json";
 const SMTP = {
@@ -176,7 +181,7 @@ function toCsv(rows) {
 }
 
 app.get("/api/fiches", rateLimit("admin-auth", 20, 10 * 60 * 1000), async (req, res) => {
-  const pass = req.query.pass || "";
+  const pass = getAdminPass(req);
   if (!ADMINS.includes(pass.toUpperCase())) {
     return res.status(401).json({ error: "Accès refusé : mot de passe admin requis." });
   }
@@ -301,7 +306,7 @@ app.post("/api/fiches/:ref/paiement", rateLimit("declaration-paiement", 15, 15 *
 });
 
 app.patch("/api/fiches/:ref", rateLimit("admin-auth", 20, 10 * 60 * 1000), async (req, res) => {
-  const pass = (req.query.pass || req.body.pass || "").toString().toUpperCase();
+  const pass = getAdminPass(req).toUpperCase();
   if (!ADMINS.includes(pass)) return res.status(401).json({ error: "Accès refusé." });
   const db = await readDb();
   const idx = db.findIndex((f) => f.ref === req.params.ref);
@@ -350,7 +355,7 @@ app.patch("/api/fiches/:ref", rateLimit("admin-auth", 20, 10 * 60 * 1000), async
 });
 
 app.delete("/api/fiches/:ref", rateLimit("admin-auth", 20, 10 * 60 * 1000), async (req, res) => {
-  const pass = (req.query.pass || req.body.pass || "").toString().toUpperCase();
+  const pass = getAdminPass(req).toUpperCase();
   if (!ADMINS.includes(pass)) return res.status(401).json({ error: "Accès refusé." });
   const db = await readDb();
   const idx = db.findIndex((f) => f.ref === req.params.ref);
@@ -365,7 +370,7 @@ app.delete("/api/fiches/:ref", rateLimit("admin-auth", 20, 10 * 60 * 1000), asyn
 });
 
 app.get("/api/export/fiches.csv", rateLimit("admin-auth", 20, 10 * 60 * 1000), async (req, res) => {
-  const pass = req.query.pass || "";
+  const pass = getAdminPass(req);
   if (!ADMINS.includes(pass.toUpperCase())) {
     return res.status(401).json({ error: "Accès refusé." });
   }
