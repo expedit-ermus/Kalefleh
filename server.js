@@ -27,6 +27,29 @@ const SMTP = {
 };
 const SMTP_READY = Boolean(SMTP.host && SMTP.user && SMTP.pass);
 
+// ---- En-têtes de sécurité HTTP (protection clickjacking, MIME-sniffing, fuite de referrer, etc.) ----
+app.use((req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  res.setHeader(
+    "Content-Security-Policy",
+    [
+      "default-src 'self'",
+      "script-src 'self'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com",
+      "img-src 'self' data:",
+      "connect-src 'self'",
+      "frame-ancestors 'none'",
+      "base-uri 'self'",
+      "form-action 'self'"
+    ].join("; ")
+  );
+  next();
+});
+
 app.use(express.json({ limit: "100kb" }));
 app.use(
   express.static(path.join(__dirname, "public"), {
@@ -398,6 +421,14 @@ app.get("/api/export/fiches.csv", rateLimit("admin-auth", 20, 10 * 60 * 1000), a
   res.header("Content-Type", "text/csv; charset=utf-8");
   res.header("Content-Disposition", 'attachment; filename="kalefleh-fiches-clients.csv"');
   res.send("\uFEFF" + csv);
+});
+
+// ---- 404 : toute route non reconnue (page ou API) tombe ici ----
+app.use((req, res) => {
+  if (req.path.startsWith("/api/")) {
+    return res.status(404).json({ error: "Route introuvable." });
+  }
+  res.status(404).sendFile(path.join(__dirname, "public", "404.html"));
 });
 
 if (require.main === module) {
