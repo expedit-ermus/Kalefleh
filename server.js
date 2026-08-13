@@ -211,6 +211,9 @@ app.post("/api/fiches", rateLimit("nouvelle-fiche", 5, 15 * 60 * 1000), async (r
   if (!nomClient && !telephone) {
     return res.status(400).json({ error: "Le nom du client ou le téléphone est obligatoire." });
   }
+  if (!b.consentTraitement) {
+    return res.status(400).json({ error: "Le consentement au traitement des données est obligatoire pour envoyer une demande." });
+  }
   const fiche = {
     ref: `KF-${Date.now().toString(36).toUpperCase()}`,
     date: new Date().toISOString(),
@@ -232,6 +235,9 @@ app.post("/api/fiches", rateLimit("nouvelle-fiche", 5, 15 * 60 * 1000), async (r
     compagnie_expedition: String(b.compagnieExpedition || "KALEFLEH s'occupe de tout").trim().slice(0, 160),
     adresse_livraison: String(b.adresseLivraison || "").trim().slice(0, 300),
     commentaire: String(b.commentaire || "").trim().slice(0, 1000),
+    consent_traitement: true,
+    consent_marketing: Boolean(b.consentMarketing),
+    consent_date: new Date().toISOString(),
     statut: "NOUVEAU",
     suivi: [{ date: new Date().toISOString(), auteur: "système", texte: "Demande de devis reçue.", visibilite: "client" }]
   };
