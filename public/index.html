@@ -71,6 +71,7 @@
   </script>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Aller au contenu</a>
 
   <!-- NAVBAR -->
   <nav class="navbar">
@@ -110,7 +111,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="main-content">
 
     <!-- PAIN -->
     <section class="card pain">
@@ -388,9 +389,7 @@
     </div>
     <p class="footer-copy">© <span id="year"></span> KALEFLEH — Tu commandes, on fait tes courses.</p>
   </footer>
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
+  <script src="year.js"></script>
   <script src="app.js"></script>
   <script src="nav.js"></script>
 </body>
