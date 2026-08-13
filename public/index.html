@@ -75,7 +75,7 @@
   <!-- NAVBAR -->
   <nav class="navbar">
     <a href="#top" class="navbar-logo">KALEFLEH</a>
-    <div class="navbar-links">
+    <div class="navbar-links" id="navbarLinks">
       <a href="#temoignages">Avis</a>
       <a href="#comment">Étapes</a>
       <a href="tarifs.html" class="navbar-nowrap">Tarifs</a>
@@ -84,6 +84,9 @@
       <a href="contact.html">Contact</a>
       <a href="#devis" class="btn-nav">Devis gratuit</a>
     </div>
+    <button type="button" class="navbar-burger" id="navbarBurger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbarLinks">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
   <!-- HERO -->
@@ -377,5 +380,6 @@
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
   <script src="app.js"></script>
+  <script src="nav.js"></script>
 </body>
 </html>
