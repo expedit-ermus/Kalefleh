@@ -184,7 +184,13 @@ main, .wrap { max-width: 860px; margin: 0 auto 80px; padding: 0 16px; }
 
 /* PRICING ------------------------------------------------ */
 .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 14px 0 6px; }
-.price { background: #f6efe6; border: 2px solid #e5d7c5; border-radius: 14px; padding: 18px 14px; text-align: center; position: relative; }
+.price { background: #f6efe6; border: 2px solid #e5d7c5; border-radius: 14px; padding: 18px 14px; text-align: center; position: relative; cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .1s; }
+.price:hover { border-color: var(--primary-light); transform: translateY(-1px); }
+.price:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+.price.is-selected { border-color: var(--primary-dark); background: var(--amber-tint); box-shadow: 0 0 0 3px var(--amber-light); }
+.price.is-selected::after { content: "✓ Sélectionné"; position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--primary-dark); color: #fff; font-size: .68rem; font-weight: 700; padding: 2px 10px; border-radius: 10px; }
+.price.is-auto::before { content: "Suggéré selon vos courses"; display: block; font-size: .68rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+.price-hint { font-size: .82rem; margin-top: 4px; }
 .price-hot { border-color: var(--primary); background: var(--amber-tint); box-shadow: var(--shadow); }
 .price strong { display: block; font-size: 1.6rem; color: var(--primary-dark); }
 .price span { font-weight: 700; color: var(--text); font-size: .92rem; }
