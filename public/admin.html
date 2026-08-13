@@ -294,6 +294,7 @@
           cell("Avance", money(f.avance_fcfa)) + cell("Paiement", f.paiement) +
           cell("Compagnie", f.compagnie_expedition) + cell("Livraison", f.adresse_livraison) +
           cell("Détail course", f.details_course) + cell("Commentaire", f.commentaire) +
+          cell("Consentement RGPD", (f.consent_traitement ? "✅ Traitement accepté" : "⚠️ Non renseigné") + (f.consent_marketing ? " · ✅ Marketing OK" : " · ❌ Pas de marketing")) +
           '</div>' +
           '<div class="fiche-actions">' +
           '<label class="statut-select">Statut : ' +
