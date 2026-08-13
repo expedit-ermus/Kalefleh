@@ -237,6 +237,14 @@
       return;
     }
 
+    var consentTraitement = document.getElementById("consentTraitement");
+    if (!consentTraitement || !consentTraitement.checked) {
+      setStatus("Merci d'accepter le traitement de vos données pour continuer (case obligatoire).", false);
+      if (consentTraitement) consentTraitement.focus();
+      return;
+    }
+    var consentMarketing = document.getElementById("consentMarketing");
+
     var prestation = computePrestation();
     var expedition = 0;
     var isDevis = manualTier === "devis";
@@ -262,7 +270,9 @@
       paiement: document.getElementById("paiement").value,
       compagnieExpedition: document.getElementById("compagnieExpedition").value,
       adresseLivraison: document.getElementById("adresseLivraison").value,
-      commentaire: commentaireFinal
+      commentaire: commentaireFinal,
+      consentTraitement: true,
+      consentMarketing: !!(consentMarketing && consentMarketing.checked)
     };
 
     try {
