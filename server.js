@@ -28,7 +28,21 @@ const SMTP = {
 const SMTP_READY = Boolean(SMTP.host && SMTP.user && SMTP.pass);
 
 app.use(express.json({ limit: "100kb" }));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  express.static(path.join(__dirname, "public"), {
+    // Cache navigateur : les images/icônes changent rarement (7j), CSS/JS un peu plus souvent (1h),
+    // les pages HTML jamais en cache long (toujours revalidées) pour éviter du contenu obsolète.
+    setHeaders: (res, filePath) => {
+      if (/\.(png|jpg|jpeg|svg|webp|ico)$/i.test(filePath)) {
+        res.setHeader("Cache-Control", "public, max-age=604800"); // 7 jours
+      } else if (/\.(css|js)$/i.test(filePath)) {
+        res.setHeader("Cache-Control", "public, max-age=3600"); // 1 heure
+      } else if (/\.html$/i.test(filePath)) {
+        res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
+      }
+    }
+  })
+);
 
 // ---- Anti-abus : limiteur de requêtes simple, en mémoire (par IP + route) ----
 const RATE_BUCKETS = new Map();
