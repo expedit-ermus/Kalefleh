@@ -232,7 +232,7 @@
       var holder = document.getElementById("fiches");
       holder.innerHTML = '<p class="empty">Chargement...</p>';
       try {
-        var res = await fetch("/api/fiches?pass=" + encodeURIComponent(pass));
+        var res = await fetch("/api/fiches", { headers: { "X-Admin-Pass": pass } });
         var data = await res.json();
         if (!res.ok) throw new Error(data.error || "Accès refusé.");
         allFiches = data.fiches || [];
@@ -360,9 +360,9 @@
 
     async function updateStatut(ref, statut) {
       try {
-        var res = await fetch("/api/fiches/" + encodeURIComponent(ref) + "?pass=" + encodeURIComponent(pass), {
+        var res = await fetch("/api/fiches/" + encodeURIComponent(ref), {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "X-Admin-Pass": pass },
           body: JSON.stringify({ statut: statut })
         });
         var data = await res.json();
@@ -376,9 +376,9 @@
 
     async function addNote(ref, payload, el) {
       try {
-        var res = await fetch("/api/fiches/" + encodeURIComponent(ref) + "?pass=" + encodeURIComponent(pass), {
+        var res = await fetch("/api/fiches/" + encodeURIComponent(ref), {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "X-Admin-Pass": pass },
           body: JSON.stringify(payload)
         });
         var data = await res.json();
@@ -401,9 +401,9 @@
 
     async function updateFiche(ref, payload) {
       try {
-        var res = await fetch("/api/fiches/" + encodeURIComponent(ref) + "?pass=" + encodeURIComponent(pass), {
+        var res = await fetch("/api/fiches/" + encodeURIComponent(ref), {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "X-Admin-Pass": pass },
           body: JSON.stringify(payload)
         });
         var data = await res.json();
@@ -416,8 +416,9 @@
 
     async function deleteFiche(ref) {
       try {
-        var res = await fetch("/api/fiches/" + encodeURIComponent(ref) + "?pass=" + encodeURIComponent(pass), {
-          method: "DELETE"
+        var res = await fetch("/api/fiches/" + encodeURIComponent(ref), {
+          method: "DELETE",
+          headers: { "X-Admin-Pass": pass }
         });
         var data = await res.json();
         if (!res.ok) throw new Error(data.error || "Erreur.");
@@ -507,15 +508,29 @@
     document.getElementById("btnLogin").onclick = async function () {
       var v = document.getElementById("passInput").value.trim().toUpperCase();
       if (!v) { loginMsg.textContent = "Entrez un mot de passe."; return; }
-      var res = await fetch("/api/fiches?pass=" + encodeURIComponent(v));
+      var res = await fetch("/api/fiches", { headers: { "X-Admin-Pass": v } });
       if (res.status === 401) { loginMsg.textContent = "Mot de passe incorrect."; return; }
       pass = v;
       sessionStorage.setItem("kf_pass", pass);
       showPanel();
     };
 
-    document.getElementById("btnExport").onclick = function () {
-      window.location.href = "/api/export/fiches.csv?pass=" + encodeURIComponent(pass);
+    document.getElementById("btnExport").onclick = async function () {
+      try {
+        var res = await fetch("/api/export/fiches.csv", { headers: { "X-Admin-Pass": pass } });
+        if (!res.ok) throw new Error("Export refusé.");
+        var blob = await res.blob();
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "kalefleh-fiches-clients.csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
+      } catch (err) {
+        alert("Erreur export : " + err.message);
+      }
     };
 
     document.getElementById("btnLogout").onclick = function () {
