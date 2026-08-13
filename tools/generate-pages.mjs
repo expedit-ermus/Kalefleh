@@ -44,7 +44,7 @@ function nav() {
   return `
 <nav class="navbar">
   <a href="index.html" class="navbar-logo">KALEFLEH</a>
-  <div class="navbar-links">
+  <div class="navbar-links" id="navbarLinks">
     <a href="tarifs.html" class="navbar-nowrap">Tarifs</a>
     <a href="suivi.html">Suivi</a>
     <a href="faq.html">FAQ</a>
@@ -52,6 +52,9 @@ function nav() {
     <a href="contact.html">Contact</a>
     <a href="index.html#devis" class="btn-nav">Devis gratuit</a>
   </div>
+  <button type="button" class="navbar-burger" id="navbarBurger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbarLinks">
+    <span></span><span></span><span></span>
+  </button>
 </nav>`;
 }
 
@@ -103,7 +106,7 @@ function footer() {
 function page(meta, body, opts = {}) {
   const sticky = opts.sticky === false ? "" : `
   <div class="sticky-cta"><a href="index.html#devis" class="btn-primary">Obtenir mon devis gratuit 🚀</a></div>`;
-  return head(meta) + nav() + "\n\n<main class=\"wrap\">\n" + body + "\n</main>\n" + sticky + footer() + "\n</body>\n</html>\n";
+  return head(meta) + nav() + "\n\n<main class=\"wrap\">\n" + body + "\n</main>\n" + sticky + footer() + "\n<script src=\"nav.js\"></script>\n</body>\n</html>\n";
 }
 
 function hero(ic, titleHtml, tagline, crumbsLabels, pills = []) {
@@ -581,7 +584,7 @@ function payerPage() {
   document.getElementById("payRef").focus();
 })();
 </script>`;
-  const html = head({ slug: "payer.html", title: "Payer mon avance en ligne — KALEFLEH", desc: "Déclare ton avance en ligne (Wave, Orange Money, MTN MoMo, Moov) pour lancer tes courses au pays. Trace ajoutée à ton suivi de commande." }) + nav() + "\n\n<main class=\"wrap\">\n" + body + "\n</main>\n" + footer() + "\n" + script + "\n</body>\n</html>\n";
+  const html = head({ slug: "payer.html", title: "Payer mon avance en ligne — KALEFLEH", desc: "Déclare ton avance en ligne (Wave, Orange Money, MTN MoMo, Moov) pour lancer tes courses au pays. Trace ajoutée à ton suivi de commande." }) + nav() + "\n\n<main class=\"wrap\">\n" + body + "\n</main>\n" + footer() + "\n" + script + "\n<script src=\"nav.js\"></script>\n</body>\n</html>\n";
   fs.writeFileSync(path.join(OUT, "payer.html"), html, "utf8");
   console.log("✓ payer.html");
 }
