@@ -18,14 +18,51 @@
     return typeInputs.filter(function (c) { return c.checked; }).map(function (c) { return c.value; });
   }
 
-  function computePrestation() {
+  function autoTier() {
     var types = selectedTypes();
-    if (types.length === 0) return PRESTATION_SIMPLE;
+    if (types.length === 0) return "simple";
     var multi = types.length >= 3;
     if (types.indexOf("Alimentaire") !== -1) multi = true;      // marché = déplacements multiples
     if (types.indexOf("Perruques") !== -1 && types.length >= 2) multi = true; // boutique + compléments
-    return multi ? PRESTATION_COMPLETE : PRESTATION_SIMPLE;
+    return multi ? "complete" : "simple";
   }
+
+  function computePrestation() {
+    if (manualTier) {
+      var card = tarifsGrid && tarifsGrid.querySelector('[data-tier="' + manualTier + '"]');
+      return card ? Number(card.getAttribute("data-value")) || 0 : 0;
+    }
+    return autoTier() === "complete" ? PRESTATION_COMPLETE : PRESTATION_SIMPLE;
+  }
+
+  // ---- Sélection manuelle de la prestation (cartes tarifs) ----
+  var manualTier = null;
+  var tarifsGrid = document.getElementById("tarifsGrid");
+  var priceCards = tarifsGrid ? Array.from(tarifsGrid.querySelectorAll(".price")) : [];
+
+  function refreshTarifsUI() {
+    var active = manualTier || autoTier();
+    priceCards.forEach(function (card) {
+      var isActive = card.getAttribute("data-tier") === active;
+      card.classList.toggle("is-selected", !!manualTier && isActive);
+      card.classList.toggle("is-auto", !manualTier && isActive);
+      card.setAttribute("aria-pressed", manualTier === card.getAttribute("data-tier") ? "true" : "false");
+    });
+  }
+
+  function selectTier(tier) {
+    manualTier = manualTier === tier ? null : tier; // re-cliquer désélectionne (retour à l'auto)
+    refreshTarifsUI();
+    updateTotals();
+    updateRecap();
+  }
+
+  priceCards.forEach(function (card) {
+    card.addEventListener("click", function () { selectTier(card.getAttribute("data-tier")); });
+    card.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectTier(card.getAttribute("data-tier")); }
+    });
+  });
 
   function onBudgetChange() {
     var sel = chips.find(function (c) { return c.checked; });
@@ -48,20 +85,23 @@
   // Recalcule la prestation quand les catégories changent
   typeInputs.forEach(function (c) {
     c.addEventListener("change", function () {
+      refreshTarifsUI();
       updateTotals();
       updateRecap();
     });
   });
+  refreshTarifsUI();
 
   // ---- Live estimate ----
   var liveTotal = document.getElementById("liveTotal");
   function updateTotals() {
     if (!liveTotal) return;
     var prestation = computePrestation();
+    var isDevis = manualTier === "devis";
     liveTotal.hidden = budgetValue <= 0;
     document.getElementById("tBudget").textContent = money(budgetValue);
-    document.getElementById("tPrestation").textContent = money(prestation);
-    document.getElementById("tTotal").textContent = money(budgetValue + prestation);
+    document.getElementById("tPrestation").textContent = isDevis ? "Sur devis" : money(prestation);
+    document.getElementById("tTotal").textContent = isDevis ? money(budgetValue) + " + prestation à définir" : money(budgetValue + prestation);
   }
 
   // ---- Récap live ----
@@ -82,7 +122,8 @@
     if (email) items.push("<b>Email :</b> " + escHtml(email));
     if (types.length) items.push("<b>Courses :</b> " + types.map(escHtml).join(", "));
     if (budgetValue > 0) items.push("<b>Budget :</b> " + money(budgetValue));
-    if (prestation) items.push("<b>Prestation :</b> " + money(prestation));
+    if (manualTier === "devis") items.push("<b>Prestation :</b> Sur devis (grosse commande)");
+    else if (prestation) items.push("<b>Prestation :</b> " + money(prestation) + (manualTier ? " (choisie)" : " (estimée)"));
     if (livraison) items.push("<b>Livraison :</b> " + escHtml(livraison));
 
     if (items.length === 0) { recap.hidden = true; return; }
@@ -198,6 +239,11 @@
 
     var prestation = computePrestation();
     var expedition = 0;
+    var isDevis = manualTier === "devis";
+    var commentaireBase = document.getElementById("commentaire").value;
+    var commentaireFinal = isDevis
+      ? ("[Prestation demandée : sur devis, grosse commande] " + commentaireBase).trim()
+      : commentaireBase;
     var payload = {
       nomClient: nom,
       telephone: tel,
@@ -216,7 +262,7 @@
       paiement: document.getElementById("paiement").value,
       compagnieExpedition: document.getElementById("compagnieExpedition").value,
       adresseLivraison: document.getElementById("adresseLivraison").value,
-      commentaire: document.getElementById("commentaire").value
+      commentaire: commentaireFinal
     };
 
     try {
@@ -256,6 +302,8 @@
 
       form.reset();
       budgetValue = 0;
+      manualTier = null;
+      refreshTarifsUI();
       if (customBudgetWrap) customBudgetWrap.hidden = true;
       updateTotals();
       updateRecap();
