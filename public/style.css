@@ -330,6 +330,11 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline-colo
 .msg-actions .form-status { margin-top: 0; min-height: auto; font-size: .9rem; }
 
 /* Submit */
+.consent-block { margin-top: 22px; padding: 16px 18px; background: var(--cream); border: 1.5px solid #e5d7c5; border-radius: 12px; }
+.consent-line { display: flex; align-items: flex-start; gap: 10px; font-size: .84rem; color: var(--text); line-height: 1.45; cursor: pointer; }
+.consent-line + .consent-line { margin-top: 10px; }
+.consent-line input[type="checkbox"] { flex: 0 0 auto; width: 18px; height: 18px; margin-top: 2px; accent-color: var(--primary); cursor: pointer; }
+.consent-line a { color: var(--primary-dark); font-weight: 600; }
 .form-cta { text-align: center; margin-top: 8px; }
 .btn-submit { width: 100%; padding: 16px; font-size: 1.1rem; }
 .reassure { margin-top: 12px; font-size: .82rem; color: var(--muted); }
