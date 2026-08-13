@@ -200,10 +200,23 @@
   var status = document.getElementById("formStatus");
   var form = document.getElementById("devisForm");
   var whatsappAdmin = document.getElementById("whatsappAdmin");
+  var submitBtn = form.querySelector(".btn-submit");
+  var submitBtnDefaultText = submitBtn ? submitBtn.textContent : "";
 
   function setStatus(msg, ok) {
     status.className = "form-status" + (ok ? " ok" : " err");
     status.textContent = msg;
+  }
+
+  // Focus + scroll sur le champ fautif, avec surbrillance temporaire (UX : on montre où corriger)
+  function focusInvalid(el) {
+    if (!el) return;
+    el.classList.add("field-error");
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.focus({ preventScroll: true });
+    var clear = function () { el.classList.remove("field-error"); el.removeEventListener("input", clear); el.removeEventListener("change", clear); };
+    el.addEventListener("input", clear);
+    el.addEventListener("change", clear);
   }
 
   form.addEventListener("submit", async function (e) {
@@ -220,27 +233,38 @@
       return;
     }
 
-    var nom = document.getElementById("nomClient").value.trim();
-    var tel = document.getElementById("telephone").value.trim();
-    if (!nom || !tel) {
-      setStatus("Merci d'indiquer votre nom et votre téléphone.", false);
+    var nomEl = document.getElementById("nomClient");
+    var telEl = document.getElementById("telephone");
+    var nom = nomEl.value.trim();
+    var tel = telEl.value.trim();
+    if (!nom) {
+      setStatus("Merci d'indiquer votre nom.", false);
+      focusInvalid(nomEl);
+      return;
+    }
+    if (!tel) {
+      setStatus("Merci d'indiquer votre téléphone.", false);
+      focusInvalid(telEl);
       return;
     }
     if (!validPhone(tel)) {
       setStatus("Numéro de téléphone invalide (indiquez l'indicatif, ex : +225 07 07 07 07 07).", false);
+      focusInvalid(telEl);
       return;
     }
 
     var types = selectedTypes();
     if (types.length === 0) {
       setStatus("Veuillez cocher au moins un type de courses.", false);
+      var firstType = typeInputs && typeInputs[0];
+      focusInvalid(firstType);
       return;
     }
 
     var consentTraitement = document.getElementById("consentTraitement");
     if (!consentTraitement || !consentTraitement.checked) {
       setStatus("Merci d'accepter le traitement de vos données pour continuer (case obligatoire).", false);
-      if (consentTraitement) consentTraitement.focus();
+      focusInvalid(consentTraitement);
       return;
     }
     var consentMarketing = document.getElementById("consentMarketing");
@@ -276,6 +300,7 @@
     };
 
     try {
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Envoi en cours…"; }
       var res = await fetch("/api/fiches", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -320,6 +345,8 @@
       setTimeout(function () { status.textContent = ""; }, 15000);
     } catch (err) {
       setStatus("Échec de l'envoi : " + err.message, false);
+    } finally {
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitBtnDefaultText; }
     }
   });
 })();
