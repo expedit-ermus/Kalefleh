@@ -20,12 +20,15 @@
 
   <nav class="navbar">
     <a href="/" class="navbar-logo">KALEFLEH</a>
-    <div class="navbar-links">
+    <div class="navbar-links" id="navbarLinks">
       <a href="/#comment">Étapes</a>
       <a href="/#tarifs">Tarifs</a>
       <a href="/#devis" class="btn-nav">Devis gratuit</a>
     </div>
-  </nav>
+  <button type="button" class="navbar-burger" id="navbarBurger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbarLinks">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
   <header class="hero">
     <div class="hero-inner">
@@ -214,5 +217,6 @@
       }
     })();
   </script>
+<script src="nav.js"></script>
 </body>
 </html>
