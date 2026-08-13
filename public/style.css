@@ -395,6 +395,27 @@ details p { color: var(--muted); margin-top: 8px; font-size: .92rem; }
 .sticky-cta .btn-primary { width: 100%; text-align: center; }
 
 /* FOOTER ------------------------------------------------ */
+.skip-link {
+  position: absolute;
+  top: -60px;
+  left: 12px;
+  background: var(--primary);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 0 0 10px 10px;
+  font-weight: 700;
+  text-decoration: none;
+  z-index: 100;
+  transition: top .15s;
+}
+.skip-link:focus { top: 0; }
+
+.not-found { text-align: center; padding: 80px 20px 60px; max-width: 560px; margin: 0 auto; }
+.not-found-ic { font-size: 4rem; display: block; margin-bottom: 18px; }
+.not-found h1 { font-family: var(--font-display); font-size: 1.7rem; margin-bottom: 10px; }
+.not-found p { color: var(--muted); margin-bottom: 26px; }
+.not-found-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
 .footer { background: var(--dark); color: #cfc8bd; padding: 40px 24px 24px; margin-bottom: 0; }
 .footer-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1.6fr repeat(4, 1fr); gap: 22px; }
 .footer-logo { font-family: var(--font-display); font-weight: 900; color: var(--primary); font-size: 1.4rem; letter-spacing: 3px; margin-bottom: 8px; }
