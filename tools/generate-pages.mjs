@@ -37,7 +37,8 @@ function head(meta) {
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>`;
+<body>
+<a href="#main-content" class="skip-link">Aller au contenu</a>`;
 }
 
 function nav() {
@@ -97,16 +98,13 @@ function footer() {
     </div>
   </div>
   <p class="footer-copy">© <span id="year"></span> KALEFLEH — Tu commandes, on fait tes courses.</p>
-</footer>
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>`;
+</footer>`;
 }
 
 function page(meta, body, opts = {}) {
   const sticky = opts.sticky === false ? "" : `
   <div class="sticky-cta"><a href="index.html#devis" class="btn-primary">Obtenir mon devis gratuit 🚀</a></div>`;
-  return head(meta) + nav() + "\n\n<main class=\"wrap\">\n" + body + "\n</main>\n" + sticky + footer() + "\n<script src=\"nav.js\"></script>\n</body>\n</html>\n";
+  return head(meta) + nav() + "\n\n<main class=\"wrap\" id=\"main-content\">\n" + body + "\n</main>\n" + sticky + footer() + "\n<script src=\"nav.js\"></script>\n<script src=\"year.js\"></script>\n</body>\n</html>\n";
 }
 
 function hero(ic, titleHtml, tagline, crumbsLabels, pills = []) {
@@ -539,7 +537,6 @@ function payerPage() {
     </div>
   </section>`;
   const script = `
-<script>
 (function () {
   var form = document.getElementById("payForm");
   var status = document.getElementById("payStatus");
@@ -583,8 +580,9 @@ function payerPage() {
   });
   document.getElementById("payRef").focus();
 })();
-</script>`;
-  const html = head({ slug: "payer.html", title: "Payer mon avance en ligne — KALEFLEH", desc: "Déclare ton avance en ligne (Wave, Orange Money, MTN MoMo, Moov) pour lancer tes courses au pays. Trace ajoutée à ton suivi de commande." }) + nav() + "\n\n<main class=\"wrap\">\n" + body + "\n</main>\n" + footer() + "\n" + script + "\n<script src=\"nav.js\"></script>\n</body>\n</html>\n";
+`;
+  fs.writeFileSync(path.join(OUT, "payer.js"), script.trim() + "\n", "utf8");
+  const html = head({ slug: "payer.html", title: "Payer mon avance en ligne — KALEFLEH", desc: "Déclare ton avance en ligne (Wave, Orange Money, MTN MoMo, Moov) pour lancer tes courses au pays. Trace ajoutée à ton suivi de commande." }) + nav() + "\n\n<main class=\"wrap\">\n" + body + "\n</main>\n" + footer() + "\n<script src=\"nav.js\"></script>\n<script src=\"year.js\"></script>\n<script src=\"payer.js\"></script>\n</body>\n</html>\n";
   fs.writeFileSync(path.join(OUT, "payer.html"), html, "utf8");
   console.log("✓ payer.html");
 }
