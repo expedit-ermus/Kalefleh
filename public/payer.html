@@ -24,7 +24,8 @@
 <body>
 <nav class="navbar">
   <a href="index.html" class="navbar-logo">KALEFLEH</a>
-  <div class="navbar-links">
+  <button type="button" class="navbar-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbar-links">☰</button>
+  <div class="navbar-links" id="navbar-links">
     <a href="tarifs.html" class="navbar-nowrap">Tarifs</a>
     <a href="suivi.html">Suivi</a>
     <a href="faq.html">FAQ</a>
@@ -63,13 +64,16 @@
       </div>
       <div class="form-block">
         <h3>2. Moyen de paiement envoyé</h3>
-        <div class="method-grid">
-          <label class="method"><input type="radio" name="methode" value="Wave" checked /> <span class="m-ic">🌊</span><div>Wave <span class="m-note">Transfert instantané</span></div></label>
-          <label class="method"><input type="radio" name="methode" value="Orange Money" /> <span class="m-ic">🟠</span><div>Orange Money <span class="m-note">Dispo tout CI</span></div></label>
-          <label class="method"><input type="radio" name="methode" value="MTN MoMo" /> <span class="m-ic">🟡</span><div>MTN MoMo <span class="m-note">Transfert mobile</span></div></label>
-          <label class="method"><input type="radio" name="methode" value="Moov Money" /> <span class="m-ic">🔵</span><div>Moov Money <span class="m-note">Transfert mobile</span></div></label>
-          <label class="method"><input type="radio" name="methode" value="Virement international (Western Union…)" /> <span class="m-ic">🌐</span><div>Virement international <span class="m-note">Western Union, OM/MTN diaspora…</span></div></label>
-        </div>
+        <fieldset style="border:none; padding:0; margin:0;">
+          <legend class="visually-hidden" style="display:none;">Moyen de paiement</legend>
+          <div class="method-grid">
+            <label class="method"><input type="radio" name="methode" value="Wave" checked /> <span class="m-ic">🌊</span><div>Wave <span class="m-note">Transfert instantané</span></div></label>
+            <label class="method"><input type="radio" name="methode" value="Orange Money" /> <span class="m-ic">🟠</span><div>Orange Money <span class="m-note">Dispo tout CI</span></div></label>
+            <label class="method"><input type="radio" name="methode" value="MTN MoMo" /> <span class="m-ic">🟡</span><div>MTN MoMo <span class="m-note">Transfert mobile</span></div></label>
+            <label class="method"><input type="radio" name="methode" value="Moov Money" /> <span class="m-ic">🔵</span><div>Moov Money <span class="m-note">Transfert mobile</span></div></label>
+            <label class="method"><input type="radio" name="methode" value="Virement international (Western Union…)" /> <span class="m-ic">🌐</span><div>Virement international <span class="m-note">Western Union, OM/MTN diaspora…</span></div></label>
+          </div>
+        </fieldset>
       </div>
       <div class="form-block">
         <h3>3. Ton numéro (pour te confirmer)</h3>
@@ -105,32 +109,40 @@
     </div>
     <div>
       <strong>Navigation</strong>
-      <a href="index.html#temoignages">Avis</a>
-      <a href="index.html#comment">Étapes</a>
-      <a href="tarifs.html">Tarifs &amp; prestation</a>
-      <a href="suivi.html">Suivi de commande</a>
-      <a href="faq.html">Questions fréquentes</a>
-      <a href="contact.html">Contact</a>
-      <a href="index.html#devis">Devis gratuit</a>
+      <ul>
+        <li><a href="index.html#temoignages">Avis</a></li>
+        <li><a href="index.html#comment">Étapes</a></li>
+        <li><a href="tarifs.html">Tarifs &amp; prestation</a></li>
+        <li><a href="suivi.html">Suivi de commande</a></li>
+        <li><a href="faq.html">Questions fréquentes</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="index.html#devis">Devis gratuit</a></li>
+      </ul>
     </div>
     <div>
       <strong>Nos courses</strong>
-      <a href="niche-vetements.html">Vêtements</a>
-      <a href="niche-cosmetiques.html">Cosmétiques</a>
-      <a href="niche-perruques.html">Perruques &amp; cheveux</a>
-      <a href="niche-alimentaire.html">Alimentaire</a>
+      <ul>
+        <li><a href="niche-vetements.html">Vêtements</a></li>
+        <li><a href="niche-cosmetiques.html">Cosmétiques</a></li>
+        <li><a href="niche-perruques.html">Perruques &amp; cheveux</a></li>
+        <li><a href="niche-alimentaire.html">Alimentaire</a></li>
+      </ul>
     </div>
     <div>
       <strong>Infos &amp; légal</strong>
-      <a href="livraison.html">Livraison &amp; expédition</a>
-      <a href="payer.html">Payer mon avance</a>
-      <a href="cgv.html">CGV</a>
-      <a href="mentions-legales.html">Mentions légales</a>
+      <ul>
+        <li><a href="livraison.html">Livraison &amp; expédition</a></li>
+        <li><a href="payer.html">Payer mon avance</a></li>
+        <li><a href="cgv.html">CGV</a></li>
+        <li><a href="mentions-legales.html">Mentions légales</a></li>
+      </ul>
     </div>
     <div>
       <strong>Contact</strong>
-      <a href="mailto:kalefleh.shop@gmail.com">kalefleh.shop@gmail.com</a>
-      <span>Côte d'Ivoire 🇨🇮 · Diaspora 🌍</span>
+      <ul>
+        <li><a href="mailto:kalefleh.shop@gmail.com">kalefleh.shop@gmail.com</a></li>
+        <li><span>Côte d'Ivoire 🇨🇮 · Diaspora 🌍</span></li>
+      </ul>
     </div>
   </div>
   <p class="footer-copy">© <span id="year"></span> KALEFLEH — Tu commandes, on fait tes courses.</p>
@@ -184,5 +196,6 @@
   document.getElementById("payRef").focus();
 })();
 </script>
+<script src="nav.js" defer></script>
 </body>
 </html>

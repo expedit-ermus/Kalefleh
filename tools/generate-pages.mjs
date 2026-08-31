@@ -44,7 +44,8 @@ function nav() {
   return `
 <nav class="navbar">
   <a href="index.html" class="navbar-logo">KALEFLEH</a>
-  <div class="navbar-links">
+  <button type="button" class="navbar-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbar-links">☰</button>
+  <div class="navbar-links" id="navbar-links">
     <a href="tarifs.html" class="navbar-nowrap">Tarifs</a>
     <a href="suivi.html">Suivi</a>
     <a href="faq.html">FAQ</a>
@@ -103,7 +104,7 @@ function footer() {
 function page(meta, body, opts = {}) {
   const sticky = opts.sticky === false ? "" : `
   <div class="sticky-cta"><a href="index.html#devis" class="btn-primary">Obtenir mon devis gratuit 🚀</a></div>`;
-  return head(meta) + nav() + "\n\n<main class=\"wrap\">\n" + body + "\n</main>\n" + sticky + footer() + "\n</body>\n</html>\n";
+  return head(meta) + nav() + "\n\n<main class=\"wrap\">\n" + body + "\n</main>\n" + sticky + footer() + '\n<script src="nav.js" defer></script>\n</body>\n</html>\n';
 }
 
 function hero(ic, titleHtml, tagline, crumbsLabels, pills = []) {
@@ -277,6 +278,7 @@ function nichePage(n) {
 
   const out = body + `
   <section class="card">
+    <p class="eyebrow">Notre service</p>
     <h2>Ce que fait KALEFLEH — et ce qu'on ne fait pas</h2>
     <div class="two-card">
       <div class="subcard">
@@ -291,12 +293,14 @@ function nichePage(n) {
   </section>
 
   <section class="card">
+    <p class="eyebrow">Inspirations</p>
     <h2>Des idées de commande ${n.emoji}</h2>
     <div class="example-grid">${n.examples.map((e) => `<div class="example"><span class="em">${e.em}</span><strong>${e.title}</strong><p>${e.p}</p></div>`).join("")}</div>
     <p class="muted" style="margin-top:14px">${n.notes}</p>
   </section>
 
   <section class="card">
+    <p class="eyebrow">Budget</p>
     <h2>Budget &amp; déroulé</h2>
     <ul class="list-dash">
       <li>Prestation : <b>8 000 F</b> (petite course) à <b>15 000 F</b> (course complète au marché).</li>
@@ -321,6 +325,7 @@ function tarifsPage() {
   const body = `
   ${hero("💰", "Tarifs &amp; prestation<br /><span>simples, sans surprise</span>", "On paie la course (déplacement). L'expédition est en plus, à ta charge — par ta compagnie ou via nous.", [["Accueil", "index.html"], ["Tarifs", ""]])}
   <section class="card">
+    <p class="eyebrow">La prestation</p>
     <h2>Prestation KALEFLEH</h2>
     <p class="muted">La prestation rémunère nos déplacements et le temps passé : shopping, marché, contrôle, photos, envoi.</p>
     <div class="price-grid">
@@ -332,6 +337,7 @@ function tarifsPage() {
   </section>
 
   <section class="card">
+    <p class="eyebrow">L'expédition</p>
     <h2>Expédition (à ta charge)</h2>
     <p class="muted">Tu choisis ta compagnie préférée, ou on s'en occupe pour toi au meilleur tarif du moment. Les tarifs varient au poids et selon la destination.</p>
     <div class="tbl-wrap">
@@ -349,6 +355,7 @@ function tarifsPage() {
   </section>
 
   <section class="card">
+    <p class="eyebrow">Le paiement</p>
     <h2>Paiement : avance puis solde</h2>
     <div class="pay-steps">
       <div class="pay-step"><span class="n">1</span><strong>Avance</strong><p>Pour lancer les achats (Wave, Orange, MTN, Moov, virement)</p></div>
@@ -387,6 +394,7 @@ function faqPage() {
   const body = `
   ${hero("❓", "Questions fréquentes<br /><span>tout ce qu'il faut savoir</span>", "Paiement, expédition, délais, confiance. Si ta question n'est pas là, écris-nous : on répond vite.", [["Accueil", "index.html"], ["FAQ", ""]], ["Paiement", "Expédition", "Délais", "Confiance"])}
   <section class="card">
+    <p class="eyebrow">FAQ</p>
     <h2>Les questions qu'on nous pose</h2>
     ${details}
     <div class="center" style="margin-top:18px">
@@ -404,6 +412,7 @@ function livraisonPage() {
   const body = `
   ${hero("📦", "Livraison &amp; expédition<br /><span>de l'achat à tes mains</span>", "On achète, tu valides, on envoie. Ta compagnie ou la nôtre, avec photos et reçus à chaque étape.", [["Accueil", "index.html"], ["Livraison", ""]])}
   <section class="card">
+    <p class="eyebrow">Le déroulé</p>
     <h2>Comment ça se passe</h2>
     <div class="pay-steps">
       <div class="pay-step"><span class="n">1</span><strong>Courses + photos</strong><p>On achète, tu valides tout avant envoi</p></div>
@@ -413,6 +422,7 @@ function livraisonPage() {
   </section>
 
   <section class="card">
+    <p class="eyebrow">Expédition</p>
     <h2>Compagnies et délais indicatifs</h2>
     <div class="tbl-wrap">
       <table class="tb">
@@ -430,6 +440,7 @@ function livraisonPage() {
   </section>
 
   <section class="card">
+    <p class="eyebrow">En cas de souci</p>
     <h2>Retraits, retours &amp; litiges</h2>
     <ul class="list-dash">
       <li>Les articles sont photographiés avant l'achat et avant l'expédition : le colis part en l'état validé.</li>
@@ -452,6 +463,7 @@ function contactPage() {
   const body = `
   ${hero("✉️", "Contact &amp; questions<br /><span>on te répond vite</span>", "Une question, une précision, un devis ? Passe par le formulaire ou écris-nous directement.", [["Accueil", "index.html"], ["Contact", ""]])}
   <section class="card">
+    <p class="eyebrow">Nous joindre</p>
     <h2>Les meilleurs canaux</h2>
     <div class="contact-grid">
       <div class="contact-card"><span class="ic">📱</span><strong>WhatsApp</strong><a href="https://wa.me/[NUMERO_WHATSAPP]">Écrire sur WhatsApp</a><p>La réponse la plus rapide</p></div>
@@ -463,6 +475,7 @@ function contactPage() {
   </section>
 
   <section class="card">
+    <p class="eyebrow">Disponibilité</p>
     <h2>Horaires indicatifs</h2>
     <div class="tbl-wrap">
       <table class="tb">
@@ -581,7 +594,7 @@ function payerPage() {
   document.getElementById("payRef").focus();
 })();
 </script>`;
-  const html = head({ slug: "payer.html", title: "Payer mon avance en ligne — KALEFLEH", desc: "Déclare ton avance en ligne (Wave, Orange Money, MTN MoMo, Moov) pour lancer tes courses au pays. Trace ajoutée à ton suivi de commande." }) + nav() + "\n\n<main class=\"wrap\">\n" + body + "\n</main>\n" + footer() + "\n" + script + "\n</body>\n</html>\n";
+  const html = head({ slug: "payer.html", title: "Payer mon avance en ligne — KALEFLEH", desc: "Déclare ton avance en ligne (Wave, Orange Money, MTN MoMo, Moov) pour lancer tes courses au pays. Trace ajoutée à ton suivi de commande." }) + nav() + "\n\n<main class=\"wrap\">\n" + body + "\n</main>\n" + footer() + "\n" + script + '\n<script src="nav.js" defer></script>\n</body>\n</html>\n';
   fs.writeFileSync(path.join(OUT, "payer.html"), html, "utf8");
   console.log("✓ payer.html");
 }

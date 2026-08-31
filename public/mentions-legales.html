@@ -24,7 +24,8 @@
 <body>
 <nav class="navbar">
   <a href="index.html" class="navbar-logo">KALEFLEH</a>
-  <div class="navbar-links">
+  <button type="button" class="navbar-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbar-links">☰</button>
+  <div class="navbar-links" id="navbar-links">
     <a href="tarifs.html" class="navbar-nowrap">Tarifs</a>
     <a href="suivi.html">Suivi</a>
     <a href="faq.html">FAQ</a>
@@ -44,7 +45,7 @@
     <div class="crumbs"><a href="index.html">Accueil</a> · <span>Mentions légales</span></div>
   </header>
   <section class="card prose">
-    <p class="updated">Dernière mise à jour : août 2026</p>
+    <p class="updated">Dernière mise à jour : <time datetime="2026-08">août 2026</time></p>
     <h2>Éditeur</h2>
     <p>KALEFLEH — Service de courses et shopping en Côte d'Ivoire.<br />Email : <a href="mailto:kalefleh.shop@gmail.com">kalefleh.shop@gmail.com</a> · WhatsApp : voir <a href="contact.html">page Contact</a>.</p>
     <h2>Hébergement</h2>
@@ -70,32 +71,40 @@
     </div>
     <div>
       <strong>Navigation</strong>
-      <a href="index.html#temoignages">Avis</a>
-      <a href="index.html#comment">Étapes</a>
-      <a href="tarifs.html">Tarifs &amp; prestation</a>
-      <a href="suivi.html">Suivi de commande</a>
-      <a href="faq.html">Questions fréquentes</a>
-      <a href="contact.html">Contact</a>
-      <a href="index.html#devis">Devis gratuit</a>
+      <ul>
+        <li><a href="index.html#temoignages">Avis</a></li>
+        <li><a href="index.html#comment">Étapes</a></li>
+        <li><a href="tarifs.html">Tarifs &amp; prestation</a></li>
+        <li><a href="suivi.html">Suivi de commande</a></li>
+        <li><a href="faq.html">Questions fréquentes</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="index.html#devis">Devis gratuit</a></li>
+      </ul>
     </div>
     <div>
       <strong>Nos courses</strong>
-      <a href="niche-vetements.html">Vêtements</a>
-      <a href="niche-cosmetiques.html">Cosmétiques</a>
-      <a href="niche-perruques.html">Perruques &amp; cheveux</a>
-      <a href="niche-alimentaire.html">Alimentaire</a>
+      <ul>
+        <li><a href="niche-vetements.html">Vêtements</a></li>
+        <li><a href="niche-cosmetiques.html">Cosmétiques</a></li>
+        <li><a href="niche-perruques.html">Perruques &amp; cheveux</a></li>
+        <li><a href="niche-alimentaire.html">Alimentaire</a></li>
+      </ul>
     </div>
     <div>
       <strong>Infos &amp; légal</strong>
-      <a href="livraison.html">Livraison &amp; expédition</a>
-      <a href="payer.html">Payer mon avance</a>
-      <a href="cgv.html">CGV</a>
-      <a href="mentions-legales.html">Mentions légales</a>
+      <ul>
+        <li><a href="livraison.html">Livraison &amp; expédition</a></li>
+        <li><a href="payer.html">Payer mon avance</a></li>
+        <li><a href="cgv.html">CGV</a></li>
+        <li><a href="mentions-legales.html">Mentions légales</a></li>
+      </ul>
     </div>
     <div>
       <strong>Contact</strong>
-      <a href="mailto:kalefleh.shop@gmail.com">kalefleh.shop@gmail.com</a>
-      <span>Côte d'Ivoire 🇨🇮 · Diaspora 🌍</span>
+      <ul>
+        <li><a href="mailto:kalefleh.shop@gmail.com">kalefleh.shop@gmail.com</a></li>
+        <li><span>Côte d'Ivoire 🇨🇮 · Diaspora 🌍</span></li>
+      </ul>
     </div>
   </div>
   <p class="footer-copy">© <span id="year"></span> KALEFLEH — Tu commandes, on fait tes courses.</p>
@@ -103,5 +112,6 @@
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 </script>
+<script src="nav.js" defer></script>
 </body>
 </html>

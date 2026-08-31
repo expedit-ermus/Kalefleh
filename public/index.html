@@ -75,7 +75,8 @@
   <!-- NAVBAR -->
   <nav class="navbar">
     <a href="#top" class="navbar-logo">KALEFLEH</a>
-    <div class="navbar-links">
+    <button type="button" class="navbar-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbar-links">☰</button>
+    <div class="navbar-links" id="navbar-links">
       <a href="#temoignages">Avis</a>
       <a href="#comment">Étapes</a>
       <a href="tarifs.html" class="navbar-nowrap">Tarifs</a>
@@ -111,13 +112,14 @@
 
     <!-- PAIN -->
     <section class="card pain">
-      <h2 class="center">Ça te ressemble ?</h2>
-      <div class="pain-grid">
-        <div class="pain-item">🌍 Tu es à l'étranger et ta famille au pays attend des affaires…</div>
-        <div class="pain-item">⏰ Tu es au pays mais tu n'as pas le temps d'aller au marché…</div>
-        <div class="pain-item">👗 Tu veux cette perruque, ce tissu, ce parfum que toi seul sais choisir…</div>
-        <div class="pain-item">🤷🏾 Tu ne sais pas à qui confier ta commande sans te faire arnaquer…</div>
-      </div>
+      <p class="eyebrow center">Ça te parle ?</p>
+      <h2 class="center">Tu reconnais ces situations ?</h2>
+      <ul class="pain-grid">
+        <li class="pain-item">🌍 Tu es à l'étranger et ta famille au pays attend des affaires…</li>
+        <li class="pain-item">⏰ Tu es au pays mais tu n'as pas le temps d'aller au marché…</li>
+        <li class="pain-item">👗 Tu veux cette perruque, ce tissu, ce parfum que toi seul sais choisir…</li>
+        <li class="pain-item">🤷🏾 Tu ne sais pas à qui confier ta commande sans te faire arnaquer…</li>
+      </ul>
       <div class="center">
         <a href="#devis" class="btn-primary">C'est mon cas : j'envoie ma commande</a>
       </div>
@@ -125,7 +127,8 @@
 
     <!-- SOLUTIONS -->
     <section class="card solution">
-      <h2>La solution KALEFLEH</h2>
+      <p class="eyebrow">La solution</p>
+      <h2>KALEFLEH s'occupe de tout</h2>
       <div class="sol-grid">
         <div class="sol"><span class="ic">🛍️</span><strong>Tu commandes</strong><p>2 minutes pour remplir ta demande : articles, budget, livraison.</p></div>
         <div class="sol"><span class="ic">✅</span><strong>On achète précisément</strong><p>Nous faisons la course et t'envoyons photos + reçus avant tout départ.</p></div>
@@ -135,50 +138,78 @@
 
     <!-- NICHES / NOS COURSES -->
     <section class="card" id="courses">
+      <p class="eyebrow">Nos courses</p>
       <h2>Ce qu'on fait pour toi</h2>
-      <p class="muted">Une page par catégorie pour tout savoir : ce qu'on achète, ce qu'on ne fait pas, exemples et budget à prévoir.</p>
-      <div class="niche-grid">
-        <a class="niche-card" href="niche-vetements.html"><span class="niche-ic">👗</span><div><strong>Vêtements</strong><p>Pagne, wax, prêt-à-porter, chaussures, sacs…</p></div><span class="go">→</span></a>
-        <a class="niche-card" href="niche-cosmetiques.html"><span class="niche-ic">💄</span><div><strong>Cosmétiques réglementés</strong><p>Parfums, soins, maquillage, produits certifiés…</p></div><span class="go">→</span></a>
-        <a class="niche-card" href="niche-perruques.html"><span class="niche-ic">💇🏾‍♀️</span><div><strong>Perruques &amp; cheveux</strong><p>Tresses, mèches, bonnets, pose et accessoires…</p></div><span class="go">→</span></a>
-        <a class="niche-card" href="niche-alimentaire.html"><span class="niche-ic">🛒</span><div><strong>Alimentaire</strong><p>Épicerie de là-bas, denrées, paniers de famille…</p></div><span class="go">→</span></a>
-      </div>
+      <p class="section-sub">Une page par catégorie pour tout savoir : ce qu'on achète, ce qu'on ne fait pas, exemples et budget à prévoir.</p>
+      <ul class="niche-grid">
+        <li><a class="niche-card" href="niche-vetements.html"><span class="niche-ic">👗</span><div><strong>Vêtements</strong><p>Pagne, wax, prêt-à-porter, chaussures, sacs…</p></div><span class="go">→</span></a></li>
+        <li><a class="niche-card" href="niche-cosmetiques.html"><span class="niche-ic">💄</span><div><strong>Cosmétiques réglementés</strong><p>Parfums, soins, maquillage, produits certifiés…</p></div><span class="go">→</span></a></li>
+        <li><a class="niche-card" href="niche-perruques.html"><span class="niche-ic">💇🏾‍♀️</span><div><strong>Perruques &amp; cheveux</strong><p>Tresses, mèches, bonnets, pose et accessoires…</p></div><span class="go">→</span></a></li>
+        <li><a class="niche-card" href="niche-alimentaire.html"><span class="niche-ic">🛒</span><div><strong>Alimentaire</strong><p>Épicerie de là-bas, denrées, paniers de famille…</p></div><span class="go">→</span></a></li>
+      </ul>
     </section>
 
     <!-- PREUVE SOCIALE -->
     <section class="card preuve" id="temoignages">
+      <p class="eyebrow center">Avis clients</p>
       <h2 class="center">La diaspora nous fait confiance</h2>
       <div class="testi-grid">
-        <div class="testi">
-          <p>« Perruques + vêtements livrés chez ma mère à Yamoussoukro. Photos et reçus reçus avant le départ, rien à dire. »</p>
-          <div class="testi-author"><strong>Aïcha</strong><span>🇨🇦 depuis Montréal</span></div>
-        </div>
-        <div class="testi">
-          <p>« Je suis à l'étranger depuis 10 ans, j'ai enfin une personne sérieuse pour les affaires du pays. Recommandé ! »</p>
-          <div class="testi-author"><strong>Jean-Baptiste</strong><span>🇫🇷 depuis Paris</span></div>
-        </div>
-        <div class="testi">
-          <p>« Commandé un samedi, livré le jeudi suivant par la compagnie que j'ai choisie. Merci KALEFLEH. »</p>
-          <div class="testi-author"><strong>Mariam</strong><span>🇨🇮 Abidjan</span></div>
-        </div>
+        <figure class="testi">
+          <blockquote><p>« Perruques + vêtements livrés chez ma mère à Yamoussoukro. Photos et reçus reçus avant le départ, rien à dire. »</p></blockquote>
+          <figcaption class="testi-author"><cite><strong>Aïcha</strong></cite><span>🇨🇦 depuis Montréal</span></figcaption>
+        </figure>
+        <figure class="testi">
+          <blockquote><p>« Je suis à l'étranger depuis 10 ans, j'ai enfin une personne sérieuse pour les affaires du pays. Recommandé ! »</p></blockquote>
+          <figcaption class="testi-author"><cite><strong>Jean-Baptiste</strong></cite><span>🇫🇷 depuis Paris</span></figcaption>
+        </figure>
+        <figure class="testi">
+          <blockquote><p>« Commandé un samedi, livré le jeudi suivant par la compagnie que j'ai choisie. Merci KALEFLEH. »</p></blockquote>
+          <figcaption class="testi-author"><cite><strong>Mariam</strong></cite><span>🇨🇮 Abidjan</span></figcaption>
+        </figure>
       </div>
+    </section>
+
+    <!-- GARANTIES -->
+    <section class="card" id="garanties">
+      <p class="eyebrow center">Nos garanties</p>
+      <h2 class="center">Commander en toute confiance</h2>
+      <ul class="guarantee-grid">
+        <li class="guarantee-card">
+          <span class="g-ic">📸</span>
+          <div><strong>Photos + reçus à chaque étape</strong><p>On te montre tout avant achat et avant envoi. Rien ne part sans ton accord.</p></div>
+        </li>
+        <li class="guarantee-card">
+          <span class="g-ic">🔍</span>
+          <div><strong>Contrôle qualité</strong><p>Tailles vérifiées, péremptions contrôlées, emballages inspectés avant expédition.</p></div>
+        </li>
+        <li class="guarantee-card">
+          <span class="g-ic">🔒</span>
+          <div><strong>Rien n'est lancé sans devis clair</strong><p>Prestation et expédition annoncées avant toute avance. Devis gratuit et sans engagement.</p></div>
+        </li>
+        <li class="guarantee-card">
+          <span class="g-ic">🤝</span>
+          <div><strong>Zéro documents administratifs</strong><p>On fait tes courses, pas les démarches. Ta commande part en toute sécurité.</p></div>
+        </li>
+      </ul>
     </section>
 
     <!-- ÉTAPES -->
     <section class="card" id="comment">
+      <p class="eyebrow">En 4 étapes</p>
       <h2>Comment ça marche ?</h2>
-      <div class="how-grid">
-        <div class="how-item"><span class="how-num">1</span><div><strong>Commande</strong><p>Remplis le formulaire. On te rappelle (WhatsApp) pour confirmer le devis.</p></div></div>
-        <div class="how-item"><span class="how-num">2</span><div><strong>Devis</strong><p>Prestation (déplacement) + expédition. Tout est clair avant toute avance.</p></div></div>
-        <div class="how-item"><span class="how-num">3</span><div><strong>Courses</strong><p>Avance versée (Wave, Orange, MTN, virement…), on achète, photos + reçus.</p></div></div>
-        <div class="how-item"><span class="how-num">4</span><div><strong>Expédition &amp; solde</strong><p>Ta compagnie ou la nôtre. Tu reçois, tu payes le reste. Fini. 🎉</p></div></div>
-      </div>
+      <ol class="how-grid">
+        <li class="how-item"><span class="how-num">1</span><div><strong>Commande</strong><p>Remplis le formulaire. On te rappelle (WhatsApp) pour confirmer le devis.</p></div></li>
+        <li class="how-item"><span class="how-num">2</span><div><strong>Devis</strong><p>Prestation (déplacement) + expédition. Tout est clair avant toute avance.</p></div></li>
+        <li class="how-item"><span class="how-num">3</span><div><strong>Courses</strong><p>Avance versée (Wave, Orange, MTN, virement…), on achète, photos + reçus.</p></div></li>
+        <li class="how-item"><span class="how-num">4</span><div><strong>Expédition &amp; solde</strong><p>Ta compagnie ou la nôtre. Tu reçois, tu payes le reste. Fini. 🎉</p></div></li>
+      </ol>
     </section>
 
     <!-- TARIFS -->
     <section class="card" id="tarifs">
+      <p class="eyebrow center">Tarifs</p>
       <h2 class="center">Prestation simple et transparente</h2>
-      <p class="center muted">La prestation couvre nos déplacements. L'expédition est en plus (à la charge du client).</p>
+      <p class="section-sub center">La prestation couvre nos déplacements. L'expédition est en plus, à la charge du client.</p>
       <div class="price-grid">
         <div class="price"><strong>8 000 F</strong><span>Petite course</span><p>3 à 5 petits articles — zone Abidjan</p></div>
         <div class="price price-hot"><strong>15 000 F</strong><span>Course complète</span><p>Shopping multi-boutiques (marché, magasins)</p><span class="pop">★ Le plus choisi</span></div>
@@ -220,15 +251,15 @@
         <!-- Courses -->
         <div class="form-block">
           <h3>2. Que fait-on pour Toi ?</h3>
-          <div class="fieldset">
-            <p class="label">Coche tout ce qu'il faut (au moins un)</p>
+          <fieldset class="fieldset">
+            <legend class="label">Coche tout ce qu'il faut (au moins un)</legend>
             <div class="checkbox-grid">
               <label class="check"><input type="checkbox" name="typesCourses" value="Vêtements" /> <span>👗</span> Vêtements</label>
               <label class="check"><input type="checkbox" name="typesCourses" value="Cosmétiques" /> <span>💄</span> Cosmétiques</label>
               <label class="check"><input type="checkbox" name="typesCourses" value="Perruques" /> <span>💇🏾‍♀️</span> Perruques</label>
               <label class="check"><input type="checkbox" name="typesCourses" value="Alimentaire" /> <span>🛒</span> Alimentaire</label>
             </div>
-          </div>
+          </fieldset>
           <label class="full">Détail de la course
             <textarea id="detailsCourse" name="detailsCourse" rows="3" placeholder="Articles, tailles, marques, quantités, boutiques préférées…"></textarea>
           </label>
@@ -237,13 +268,16 @@
         <!-- Budget -->
         <div class="form-block">
           <h3>3. Budget estimé</h3>
-          <div class="chip-grid">
-            <label class="chip"><input type="radio" name="budgetQuick" value="50000" /> Moins de 50 000 F</label>
-            <label class="chip"><input type="radio" name="budgetQuick" value="100000" /> 50 000 – 100 000 F</label>
-            <label class="chip"><input type="radio" name="budgetQuick" value="200000" /> 100 000 – 200 000 F</label>
-            <label class="chip"><input type="radio" name="budgetQuick" value="500000" /> Plus de 200 000 F</label>
-            <label class="chip"><input type="radio" name="budgetQuick" value="custom" /> Autre montant</label>
-          </div>
+          <fieldset style="border:none; padding:0; margin:0;">
+            <legend class="visually-hidden" style="display:none;">Choix du budget</legend>
+            <div class="chip-grid">
+              <label class="chip"><input type="radio" name="budgetQuick" value="50000" /> Moins de 50 000 F</label>
+              <label class="chip"><input type="radio" name="budgetQuick" value="100000" /> 50 000 – 100 000 F</label>
+              <label class="chip"><input type="radio" name="budgetQuick" value="200000" /> 100 000 – 200 000 F</label>
+              <label class="chip"><input type="radio" name="budgetQuick" value="500000" /> Plus de 200 000 F</label>
+              <label class="chip"><input type="radio" name="budgetQuick" value="custom" /> Autre montant</label>
+            </div>
+          </fieldset>
           <label class="full" id="customBudgetWrap" hidden>Montant exact (FCFA)
             <input type="number" id="budgetFcfa" name="budgetFcfa" min="0" placeholder="Ex : 150 000" />
           </label>
@@ -306,6 +340,7 @@
 
     <!-- FAQ -->
     <section class="card" id="faq">
+      <p class="eyebrow">FAQ</p>
       <h2>Questions fréquentes</h2>
       <details open>
         <summary>Je suis à l'étranger, comment je paie ?</summary>
@@ -328,6 +363,16 @@
         <p>Non. On ne fait que : vêtements, cosmétiques réglementés, perruques et alimentaire.</p>
       </details>
     </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-band" id="cta">
+    <p class="eyebrow center" style="color: var(--amber-light); justify-content: center;">Prêt·e à commander ?</p>
+    <h2>Ta course, notre affaire.<br /><span>Devis gratuit en 2 minutes, sans engagement.</span></h2>
+    <div class="hero-cta">
+      <a href="#devis" class="btn-primary btn-lg">Obtenir mon devis gratuit →</a>
+      <a href="suivi.html" class="btn-outline btn-lg">Suivre ma commande</a>
+    </div>
+  </section>
   </main>
 
   <!-- CTA STICKY MOBILE -->
@@ -342,32 +387,40 @@
       </div>
       <div>
         <strong>Navigation</strong>
-        <a href="#temoignages">Avis</a>
-        <a href="#comment">Étapes</a>
-        <a href="tarifs.html">Tarifs &amp; prestation</a>
-        <a href="suivi.html">Suivi de commande</a>
-        <a href="faq.html">Questions fréquentes</a>
-        <a href="contact.html">Contact</a>
-        <a href="#devis">Devis gratuit</a>
+        <ul>
+          <li><a href="#temoignages">Avis</a></li>
+          <li><a href="#comment">Étapes</a></li>
+          <li><a href="tarifs.html">Tarifs &amp; prestation</a></li>
+          <li><a href="suivi.html">Suivi de commande</a></li>
+          <li><a href="faq.html">Questions fréquentes</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#devis">Devis gratuit</a></li>
+        </ul>
       </div>
       <div>
         <strong>Nos courses</strong>
-        <a href="niche-vetements.html">Vêtements</a>
-        <a href="niche-cosmetiques.html">Cosmétiques</a>
-        <a href="niche-perruques.html">Perruques &amp; cheveux</a>
-        <a href="niche-alimentaire.html">Alimentaire</a>
+        <ul>
+          <li><a href="niche-vetements.html">Vêtements</a></li>
+          <li><a href="niche-cosmetiques.html">Cosmétiques</a></li>
+          <li><a href="niche-perruques.html">Perruques &amp; cheveux</a></li>
+          <li><a href="niche-alimentaire.html">Alimentaire</a></li>
+        </ul>
       </div>
       <div>
         <strong>Infos &amp; légal</strong>
-        <a href="livraison.html">Livraison &amp; expédition</a>
-        <a href="payer.html">Payer mon avance</a>
-        <a href="cgv.html">CGV</a>
-        <a href="mentions-legales.html">Mentions légales</a>
+        <ul>
+          <li><a href="livraison.html">Livraison &amp; expédition</a></li>
+          <li><a href="payer.html">Payer mon avance</a></li>
+          <li><a href="cgv.html">CGV</a></li>
+          <li><a href="mentions-legales.html">Mentions légales</a></li>
+        </ul>
       </div>
       <div>
         <strong>Contact</strong>
-        <a href="mailto:kalefleh.shop@gmail.com">kalefleh.shop@gmail.com</a>
-        <span>Côte d'Ivoire 🇨🇮 · Diaspora 🌍</span>
+        <ul>
+          <li><a href="mailto:kalefleh.shop@gmail.com">kalefleh.shop@gmail.com</a></li>
+          <li><span>Côte d'Ivoire 🇨🇮 · Diaspora 🌍</span></li>
+        </ul>
       </div>
     </div>
     <p class="footer-copy">© <span id="year"></span> KALEFLEH — Tu commandes, on fait tes courses.</p>
@@ -376,5 +429,6 @@
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
   <script src="app.js"></script>
+  <script src="nav.js" defer></script>
 </body>
 </html>

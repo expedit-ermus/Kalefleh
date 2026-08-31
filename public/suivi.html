@@ -20,7 +20,8 @@
 
   <nav class="navbar">
     <a href="/" class="navbar-logo">KALEFLEH</a>
-    <div class="navbar-links">
+    <button type="button" class="navbar-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbar-links">☰</button>
+    <div class="navbar-links" id="navbar-links">
       <a href="/#comment">Étapes</a>
       <a href="/#tarifs">Tarifs</a>
       <a href="/#devis" class="btn-nav">Devis gratuit</a>
@@ -56,16 +57,16 @@
         <p id="rMeta"></p>
       </div>
 
-      <div class="track" id="track"></div>
+      <ol class="track" id="track"></ol>
 
-      <div class="fiche-grid" id="rSummary">
-        <div><span>Statut :</span> <strong id="rStatut"></strong></div>
-        <div><span>Délai souhaité :</span> <span id="rDelai"></span></div>
-        <div><span>Total estimé :</span> <strong id="rTotal"></strong></div>
-        <div><span>Avance versée :</span> <strong id="rAvance"></strong></div>
-        <div><span>Ville :</span> <span id="rVille"></span></div>
-        <div><span>Courses :</span> <span id="rTypes"></span></div>
-      </div>
+      <dl class="fiche-grid" id="rSummary">
+        <div><dt>Statut :</dt> <dd><strong id="rStatut"></strong></dd></div>
+        <div><dt>Délai souhaité :</dt> <dd><span id="rDelai"></span></dd></div>
+        <div><dt>Total estimé :</dt> <dd><strong id="rTotal"></strong></dd></div>
+        <div><dt>Avance versée :</dt> <dd><strong id="rAvance"></strong></dd></div>
+        <div><dt>Ville :</dt> <dd><span id="rVille"></span></dd></div>
+        <div><dt>Courses :</dt> <dd><span id="rTypes"></span></dd></div>
+      </dl>
 
       <div class="suivi-client" id="rSuivi" hidden>
         <h3 style="font-size:1rem;margin:18px 0 10px">📢 Actualités de la commande</h3>
@@ -87,7 +88,50 @@
   </main>
 
   <footer class="footer">
-    <p><strong>KALEFLEH</strong> — Tu commandes, on fait tes courses.</p>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">KALEFLEH</div>
+        <p>Tu commandes, on fait ta course en Côte d'Ivoire. À l'étranger ou au pays, sans stress.</p>
+      </div>
+      <div>
+        <strong>Navigation</strong>
+        <ul>
+          <li><a href="index.html#temoignages">Avis</a></li>
+          <li><a href="index.html#comment">Étapes</a></li>
+          <li><a href="tarifs.html">Tarifs &amp; prestation</a></li>
+          <li><a href="suivi.html">Suivi de commande</a></li>
+          <li><a href="faq.html">Questions fréquentes</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="index.html#devis">Devis gratuit</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong>Nos courses</strong>
+        <ul>
+          <li><a href="niche-vetements.html">Vêtements</a></li>
+          <li><a href="niche-cosmetiques.html">Cosmétiques</a></li>
+          <li><a href="niche-perruques.html">Perruques &amp; cheveux</a></li>
+          <li><a href="niche-alimentaire.html">Alimentaire</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong>Infos &amp; légal</strong>
+        <ul>
+          <li><a href="livraison.html">Livraison &amp; expédition</a></li>
+          <li><a href="payer.html">Payer mon avance</a></li>
+          <li><a href="cgv.html">CGV</a></li>
+          <li><a href="mentions-legales.html">Mentions légales</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong>Contact</strong>
+        <ul>
+          <li><a href="mailto:kalefleh.shop@gmail.com">kalefleh.shop@gmail.com</a></li>
+          <li><span>Côte d'Ivoire 🇨🇮 · Diaspora 🌍</span></li>
+        </ul>
+      </div>
+    </div>
+    <p class="footer-copy">© <span id="year"></span> KALEFLEH — Tu commandes, on fait tes courses.</p>
   </footer>
 
   <script>
@@ -116,9 +160,9 @@
       var track = document.getElementById("track");
       track.innerHTML = STATUTS.map(function (s, i) {
         var done = i <= idx;
-        return '<div class="step' + (done ? " done" : "") + '">' +
+        return '<li class="step' + (done ? " done" : "") + '">' +
           '<span class="dot">' + (done ? "✓" : i + 1) + "</span>" +
-          "<span>" + labels[s] + "</span></div>";
+          "<span>" + labels[s] + "</span></li>";
       }).join("");
     }
 
@@ -214,5 +258,6 @@
       }
     })();
   </script>
+  <script src="nav.js" defer></script>
 </body>
 </html>
