@@ -22,10 +22,10 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+<a href="#main-content" class="skip-link">Aller au contenu</a>
 <nav class="navbar">
   <a href="index.html" class="navbar-logo">KALEFLEH</a>
-  <button type="button" class="navbar-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbar-links">☰</button>
-  <div class="navbar-links" id="navbar-links">
+  <div class="navbar-links" id="navbarLinks">
     <a href="tarifs.html" class="navbar-nowrap">Tarifs</a>
     <a href="suivi.html">Suivi</a>
     <a href="faq.html">FAQ</a>
@@ -33,9 +33,12 @@
     <a href="contact.html">Contact</a>
     <a href="index.html#devis" class="btn-nav">Devis gratuit</a>
   </div>
+  <button type="button" class="navbar-burger" id="navbarBurger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbarLinks">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<main class="wrap">
+<main class="wrap" id="main-content">
 
     <header class="page-hero">
     <span class="niche-hero-ic">💳</span>
@@ -62,19 +65,16 @@
           </label>
         </div>
       </div>
-      <div class="form-block">
-        <h3>2. Moyen de paiement envoyé</h3>
-        <fieldset style="border:none; padding:0; margin:0;">
-          <legend class="visually-hidden" style="display:none;">Moyen de paiement</legend>
-          <div class="method-grid">
-            <label class="method"><input type="radio" name="methode" value="Wave" checked /> <span class="m-ic">🌊</span><div>Wave <span class="m-note">Transfert instantané</span></div></label>
-            <label class="method"><input type="radio" name="methode" value="Orange Money" /> <span class="m-ic">🟠</span><div>Orange Money <span class="m-note">Dispo tout CI</span></div></label>
-            <label class="method"><input type="radio" name="methode" value="MTN MoMo" /> <span class="m-ic">🟡</span><div>MTN MoMo <span class="m-note">Transfert mobile</span></div></label>
-            <label class="method"><input type="radio" name="methode" value="Moov Money" /> <span class="m-ic">🔵</span><div>Moov Money <span class="m-note">Transfert mobile</span></div></label>
-            <label class="method"><input type="radio" name="methode" value="Virement international (Western Union…)" /> <span class="m-ic">🌐</span><div>Virement international <span class="m-note">Western Union, OM/MTN diaspora…</span></div></label>
-          </div>
-        </fieldset>
-      </div>
+      <fieldset class="form-block fieldset">
+        <legend class="label"><h3>2. Moyen de paiement envoyé</h3></legend>
+        <div class="method-grid">
+          <label class="method"><input type="radio" name="methode" value="Wave" checked /> <span class="m-ic">🌊</span><div>Wave <span class="m-note">Transfert instantané</span></div></label>
+          <label class="method"><input type="radio" name="methode" value="Orange Money" /> <span class="m-ic">🟠</span><div>Orange Money <span class="m-note">Dispo tout CI</span></div></label>
+          <label class="method"><input type="radio" name="methode" value="MTN MoMo" /> <span class="m-ic">🟡</span><div>MTN MoMo <span class="m-note">Transfert mobile</span></div></label>
+          <label class="method"><input type="radio" name="methode" value="Moov Money" /> <span class="m-ic">🔵</span><div>Moov Money <span class="m-note">Transfert mobile</span></div></label>
+          <label class="method"><input type="radio" name="methode" value="Virement international (Western Union…)" /> <span class="m-ic">🌐</span><div>Virement international <span class="m-note">Western Union, OM/MTN diaspora…</span></div></label>
+        </div>
+      </fieldset>
       <div class="form-block">
         <h3>3. Ton numéro (pour te confirmer)</h3>
         <label class="full">Téléphone / WhatsApp
@@ -147,55 +147,8 @@
   </div>
   <p class="footer-copy">© <span id="year"></span> KALEFLEH — Tu commandes, on fait tes courses.</p>
 </footer>
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
-
-<script>
-(function () {
-  var form = document.getElementById("payForm");
-  var status = document.getElementById("payStatus");
-  function setStatus(t, ok) { status.className = "form-status" + (ok ? " ok" : " err"); status.textContent = t; }
-  form.addEventListener("submit", async function (e) {
-    e.preventDefault();
-    var hp = document.getElementById("payWebsite");
-    if (hp && hp.value) { setStatus("Avance déclarée ✓", true); form.reset(); return; }
-    var ref = document.getElementById("payRef").value.trim().toUpperCase();
-    var montant = Number(document.getElementById("payMontant").value);
-    var methode = (form.querySelector('input[name="methode"]:checked') || {}).value || "";
-    var telephone = document.getElementById("payTel").value.trim();
-    if (!/^KF-[A-Z0-9]+$/.test(ref)) { setStatus("Référence invalide (format KF-XXXXXXXX).", false); return; }
-    if (!montant || montant < 1000) { setStatus("Indique un montant d'avance valide (min 1000 FCFA).", false); return; }
-    setStatus("Enregistrement...", false);
-    try {
-      var res = await fetch("/api/fiches/" + encodeURIComponent(ref) + "/paiement", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ montant: montant, methode: methode, telephone: telephone, website: hp ? hp.value : "" })
-      });
-      var data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Erreur.");
-      var waInput = document.getElementById("payWhatsappAdmin");
-      var wa = waInput && waInput.value;
-      if (wa && wa.indexOf("NUMERO") === -1) {
-        var msg = "Bonjour KALEFLEH 👋 Je viens de déclarer une avance de " + montant.toLocaleString("fr-FR") + " FCFA pour la commande " + ref + " via " + methode + ". Merci de confirmer.";
-        document.getElementById("okWa").href = "https://wa.me/" + wa.replace(/\D/g, "") + "?text=" + encodeURIComponent(msg);
-        document.getElementById("okWa").style.display = "inline-block";
-      } else {
-        document.getElementById("okWa").style.display = "none";
-      }
-      document.getElementById("okRef").textContent = ref;
-      document.getElementById("okResume").textContent = montant.toLocaleString("fr-FR") + " FCFA via " + methode + (telephone ? " — confirmation au " + telephone : "") + ".";
-      document.getElementById("payOk").hidden = false;
-      form.reset();
-      document.getElementById("payOk").scrollIntoView({ behavior: "smooth", block: "center" });
-    } catch (err) {
-      setStatus("Échec : " + err.message, false);
-    }
-  });
-  document.getElementById("payRef").focus();
-})();
-</script>
 <script src="nav.js" defer></script>
+<script src="year.js"></script>
+<script src="payer.js"></script>
 </body>
 </html>

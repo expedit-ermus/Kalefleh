@@ -22,10 +22,10 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+<a href="#main-content" class="skip-link">Aller au contenu</a>
 <nav class="navbar">
   <a href="index.html" class="navbar-logo">KALEFLEH</a>
-  <button type="button" class="navbar-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbar-links">☰</button>
-  <div class="navbar-links" id="navbar-links">
+  <div class="navbar-links" id="navbarLinks">
     <a href="tarifs.html" class="navbar-nowrap">Tarifs</a>
     <a href="suivi.html">Suivi</a>
     <a href="faq.html">FAQ</a>
@@ -33,9 +33,12 @@
     <a href="contact.html">Contact</a>
     <a href="index.html#devis" class="btn-nav">Devis gratuit</a>
   </div>
+  <button type="button" class="navbar-burger" id="navbarBurger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbarLinks">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<main class="wrap">
+<main class="wrap" id="main-content">
 
     <header class="page-hero">
     <span class="niche-hero-ic">🛒</span>
@@ -130,10 +133,8 @@
   </div>
   <p class="footer-copy">© <span id="year"></span> KALEFLEH — Tu commandes, on fait tes courses.</p>
 </footer>
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
 <script src="nav.js" defer></script>
+<script src="year.js"></script>
 </body>
 </html>
 <!-- topics: Épicerie, Marché, Colis famille -->

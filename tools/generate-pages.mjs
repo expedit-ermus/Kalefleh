@@ -37,15 +37,15 @@ function head(meta) {
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>`;
+<body>
+<a href="#main-content" class="skip-link">Aller au contenu</a>`;
 }
 
 function nav() {
   return `
 <nav class="navbar">
   <a href="index.html" class="navbar-logo">KALEFLEH</a>
-  <button type="button" class="navbar-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbar-links">☰</button>
-  <div class="navbar-links" id="navbar-links">
+  <div class="navbar-links" id="navbarLinks">
     <a href="tarifs.html" class="navbar-nowrap">Tarifs</a>
     <a href="suivi.html">Suivi</a>
     <a href="faq.html">FAQ</a>
@@ -53,6 +53,9 @@ function nav() {
     <a href="contact.html">Contact</a>
     <a href="index.html#devis" class="btn-nav">Devis gratuit</a>
   </div>
+  <button type="button" class="navbar-burger" id="navbarBurger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbarLinks">
+    <span></span><span></span><span></span>
+  </button>
 </nav>`;
 }
 
@@ -66,45 +69,50 @@ function footer() {
     </div>
     <div>
       <strong>Navigation</strong>
-      <a href="index.html#temoignages">Avis</a>
-      <a href="index.html#comment">Étapes</a>
-      <a href="tarifs.html">Tarifs &amp; prestation</a>
-      <a href="suivi.html">Suivi de commande</a>
-      <a href="faq.html">Questions fréquentes</a>
-      <a href="contact.html">Contact</a>
-      <a href="index.html#devis">Devis gratuit</a>
+      <ul>
+        <li><a href="index.html#temoignages">Avis</a></li>
+        <li><a href="index.html#comment">Étapes</a></li>
+        <li><a href="tarifs.html">Tarifs &amp; prestation</a></li>
+        <li><a href="suivi.html">Suivi de commande</a></li>
+        <li><a href="faq.html">Questions fréquentes</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="index.html#devis">Devis gratuit</a></li>
+      </ul>
     </div>
     <div>
       <strong>Nos courses</strong>
-      <a href="niche-vetements.html">Vêtements</a>
-      <a href="niche-cosmetiques.html">Cosmétiques</a>
-      <a href="niche-perruques.html">Perruques &amp; cheveux</a>
-      <a href="niche-alimentaire.html">Alimentaire</a>
+      <ul>
+        <li><a href="niche-vetements.html">Vêtements</a></li>
+        <li><a href="niche-cosmetiques.html">Cosmétiques</a></li>
+        <li><a href="niche-perruques.html">Perruques &amp; cheveux</a></li>
+        <li><a href="niche-alimentaire.html">Alimentaire</a></li>
+      </ul>
     </div>
     <div>
       <strong>Infos &amp; légal</strong>
-      <a href="livraison.html">Livraison &amp; expédition</a>
-      <a href="payer.html">Payer mon avance</a>
-      <a href="cgv.html">CGV</a>
-      <a href="mentions-legales.html">Mentions légales</a>
+      <ul>
+        <li><a href="livraison.html">Livraison &amp; expédition</a></li>
+        <li><a href="payer.html">Payer mon avance</a></li>
+        <li><a href="cgv.html">CGV</a></li>
+        <li><a href="mentions-legales.html">Mentions légales</a></li>
+      </ul>
     </div>
     <div>
       <strong>Contact</strong>
-      <a href="mailto:kalefleh.shop@gmail.com">kalefleh.shop@gmail.com</a>
-      <span>Côte d'Ivoire 🇨🇮 · Diaspora 🌍</span>
+      <ul>
+        <li><a href="mailto:kalefleh.shop@gmail.com">kalefleh.shop@gmail.com</a></li>
+        <li><span>Côte d'Ivoire 🇨🇮 · Diaspora 🌍</span></li>
+      </ul>
     </div>
   </div>
   <p class="footer-copy">© <span id="year"></span> KALEFLEH — Tu commandes, on fait tes courses.</p>
-</footer>
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>`;
+</footer>`;
 }
 
 function page(meta, body, opts = {}) {
   const sticky = opts.sticky === false ? "" : `
   <div class="sticky-cta"><a href="index.html#devis" class="btn-primary">Obtenir mon devis gratuit 🚀</a></div>`;
-  return head(meta) + nav() + "\n\n<main class=\"wrap\">\n" + body + "\n</main>\n" + sticky + footer() + '\n<script src="nav.js" defer></script>\n</body>\n</html>\n';
+  return head(meta) + nav() + "\n\n<main class=\"wrap\" id=\"main-content\">\n" + body + "\n</main>\n" + sticky + footer() + "\n<script src=\"nav.js\" defer></script>\n<script src=\"year.js\"></script>\n</body>\n</html>\n";
 }
 
 function hero(ic, titleHtml, tagline, crumbsLabels, pills = []) {
@@ -295,7 +303,7 @@ function nichePage(n) {
   <section class="card">
     <p class="eyebrow">Inspirations</p>
     <h2>Des idées de commande ${n.emoji}</h2>
-    <div class="example-grid">${n.examples.map((e) => `<div class="example"><span class="em">${e.em}</span><strong>${e.title}</strong><p>${e.p}</p></div>`).join("")}</div>
+    <ul class="example-grid">${n.examples.map((e) => `<li class="example"><span class="em">${e.em}</span><strong>${e.title}</strong><p>${e.p}</p></li>`).join("")}</ul>
     <p class="muted" style="margin-top:14px">${n.notes}</p>
   </section>
 
@@ -357,11 +365,11 @@ function tarifsPage() {
   <section class="card">
     <p class="eyebrow">Le paiement</p>
     <h2>Paiement : avance puis solde</h2>
-    <div class="pay-steps">
-      <div class="pay-step"><span class="n">1</span><strong>Avance</strong><p>Pour lancer les achats (Wave, Orange, MTN, Moov, virement)</p></div>
-      <div class="pay-step"><span class="n">2</span><strong>Courses + preuves</strong><p>On achète, tu reçois photos et reçus</p></div>
-      <div class="pay-step"><span class="n">3</span><strong>Expédition + solde</strong><p>Tu valides, on envoie, tu règles le reste</p></div>
-    </div>
+    <ol class="pay-steps">
+      <li class="pay-step"><span class="n">1</span><strong>Avance</strong><p>Pour lancer les achats (Wave, Orange, MTN, Moov, virement)</p></li>
+      <li class="pay-step"><span class="n">2</span><strong>Courses + preuves</strong><p>On achète, tu reçois photos et reçus</p></li>
+      <li class="pay-step"><span class="n">3</span><strong>Expédition + solde</strong><p>Tu valides, on envoie, tu règles le reste</p></li>
+    </ol>
     <div class="center" style="margin-top:18px">
       <a href="payer.html" class="btn-primary">Déclarer une avance →</a>
       <a href="index.html#devis" class="btn-outline btn-lg" style="color:var(--primary-dark);border-color:var(--primary-dark)">Demander un devis</a>
@@ -414,11 +422,11 @@ function livraisonPage() {
   <section class="card">
     <p class="eyebrow">Le déroulé</p>
     <h2>Comment ça se passe</h2>
-    <div class="pay-steps">
-      <div class="pay-step"><span class="n">1</span><strong>Courses + photos</strong><p>On achète, tu valides tout avant envoi</p></div>
-      <div class="pay-step"><span class="n">2</span><strong>Emballage soigné</strong><p>Colis protégé, pesé, étiqueté</p></div>
-      <div class="pay-step"><span class="n">3</span><strong>Expédition</strong><p>Ta compagnie (ou la nôtre) jusqu'à ta porte</p></div>
-    </div>
+    <ol class="pay-steps">
+      <li class="pay-step"><span class="n">1</span><strong>Courses + photos</strong><p>On achète, tu valides tout avant envoi</p></li>
+      <li class="pay-step"><span class="n">2</span><strong>Emballage soigné</strong><p>Colis protégé, pesé, étiqueté</p></li>
+      <li class="pay-step"><span class="n">3</span><strong>Expédition</strong><p>Ta compagnie (ou la nôtre) jusqu'à ta porte</p></li>
+    </ol>
   </section>
 
   <section class="card">
@@ -514,8 +522,8 @@ function payerPage() {
           </label>
         </div>
       </div>
-      <div class="form-block">
-        <h3>2. Moyen de paiement envoyé</h3>
+      <fieldset class="form-block fieldset">
+        <legend class="label"><h3>2. Moyen de paiement envoyé</h3></legend>
         <div class="method-grid">
           <label class="method"><input type="radio" name="methode" value="Wave" checked /> <span class="m-ic">🌊</span><div>Wave <span class="m-note">Transfert instantané</span></div></label>
           <label class="method"><input type="radio" name="methode" value="Orange Money" /> <span class="m-ic">🟠</span><div>Orange Money <span class="m-note">Dispo tout CI</span></div></label>
@@ -523,7 +531,7 @@ function payerPage() {
           <label class="method"><input type="radio" name="methode" value="Moov Money" /> <span class="m-ic">🔵</span><div>Moov Money <span class="m-note">Transfert mobile</span></div></label>
           <label class="method"><input type="radio" name="methode" value="Virement international (Western Union…)" /> <span class="m-ic">🌐</span><div>Virement international <span class="m-note">Western Union, OM/MTN diaspora…</span></div></label>
         </div>
-      </div>
+      </fieldset>
       <div class="form-block">
         <h3>3. Ton numéro (pour te confirmer)</h3>
         <label class="full">Téléphone / WhatsApp
@@ -548,53 +556,8 @@ function payerPage() {
       <input type="hidden" id="payWhatsappAdmin" value="[NUMERO_WHATSAPP]" />
     </div>
   </section>`;
-  const script = `
-<script>
-(function () {
-  var form = document.getElementById("payForm");
-  var status = document.getElementById("payStatus");
-  function setStatus(t, ok) { status.className = "form-status" + (ok ? " ok" : " err"); status.textContent = t; }
-  form.addEventListener("submit", async function (e) {
-    e.preventDefault();
-    var hp = document.getElementById("payWebsite");
-    if (hp && hp.value) { setStatus("Avance déclarée ✓", true); form.reset(); return; }
-    var ref = document.getElementById("payRef").value.trim().toUpperCase();
-    var montant = Number(document.getElementById("payMontant").value);
-    var methode = (form.querySelector('input[name="methode"]:checked') || {}).value || "";
-    var telephone = document.getElementById("payTel").value.trim();
-    if (!/^KF-[A-Z0-9]+$/.test(ref)) { setStatus("Référence invalide (format KF-XXXXXXXX).", false); return; }
-    if (!montant || montant < 1000) { setStatus("Indique un montant d'avance valide (min 1000 FCFA).", false); return; }
-    setStatus("Enregistrement...", false);
-    try {
-      var res = await fetch("/api/fiches/" + encodeURIComponent(ref) + "/paiement", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ montant: montant, methode: methode, telephone: telephone, website: hp ? hp.value : "" })
-      });
-      var data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Erreur.");
-      var waInput = document.getElementById("payWhatsappAdmin");
-      var wa = waInput && waInput.value;
-      if (wa && wa.indexOf("NUMERO") === -1) {
-        var msg = "Bonjour KALEFLEH 👋 Je viens de déclarer une avance de " + montant.toLocaleString("fr-FR") + " FCFA pour la commande " + ref + " via " + methode + ". Merci de confirmer.";
-        document.getElementById("okWa").href = "https://wa.me/" + wa.replace(/\\D/g, "") + "?text=" + encodeURIComponent(msg);
-        document.getElementById("okWa").style.display = "inline-block";
-      } else {
-        document.getElementById("okWa").style.display = "none";
-      }
-      document.getElementById("okRef").textContent = ref;
-      document.getElementById("okResume").textContent = montant.toLocaleString("fr-FR") + " FCFA via " + methode + (telephone ? " — confirmation au " + telephone : "") + ".";
-      document.getElementById("payOk").hidden = false;
-      form.reset();
-      document.getElementById("payOk").scrollIntoView({ behavior: "smooth", block: "center" });
-    } catch (err) {
-      setStatus("Échec : " + err.message, false);
-    }
-  });
-  document.getElementById("payRef").focus();
-})();
-</script>`;
-  const html = head({ slug: "payer.html", title: "Payer mon avance en ligne — KALEFLEH", desc: "Déclare ton avance en ligne (Wave, Orange Money, MTN MoMo, Moov) pour lancer tes courses au pays. Trace ajoutée à ton suivi de commande." }) + nav() + "\n\n<main class=\"wrap\">\n" + body + "\n</main>\n" + footer() + "\n" + script + '\n<script src="nav.js" defer></script>\n</body>\n</html>\n';
+  const meta = { slug: "payer.html", title: "Payer mon avance en ligne — KALEFLEH", desc: "Déclare ton avance en ligne (Wave, Orange Money, MTN MoMo, Moov) pour lancer tes courses au pays. Trace ajoutée à ton suivi de commande." };
+  const html = head(meta) + nav() + "\n\n<main class=\"wrap\" id=\"main-content\">\n" + body + "\n</main>\n" + footer() + "\n<script src=\"nav.js\" defer></script>\n<script src=\"year.js\"></script>\n<script src=\"payer.js\"></script>\n</body>\n</html>\n";
   fs.writeFileSync(path.join(OUT, "payer.html"), html, "utf8");
   console.log("✓ payer.html");
 }
@@ -604,7 +567,7 @@ function legalPages() {
   const cgvBody = `
   ${hero("📋", "Conditions générales<br /><span>claires et honnêtes</span>", "Comment on travaille ensemble : commande, prestation, paiement, expédition, responsabilités. À lire avant de commander.", [["Accueil", "index.html"], ["CGV", ""]])}
   <section class="card prose">
-    <p class="updated">Dernière mise à jour : août 2026</p>
+    <p class="updated">Dernière mise à jour : <time datetime="2026-08">août 2026</time></p>
     <h2>1. Objet</h2>
     <p>KALEFLEH propose un service de courses et de shopping en Côte d'Ivoire pour le compte de clients résidant en Côte d'Ivoire ou à l'étranger (diaspora). Le présent document encadre la demande de devis, la prestation de courses, le paiement et l'expédition.</p>
     <h2>2. Demande de devis</h2>
@@ -632,7 +595,7 @@ function legalPages() {
   const mlBody = `
   ${hero("⚖️", "Mentions légales<br /><span>qui sommes-nous</span>", "Informations éditeur, hébergement et données personnelles du site KALEFLEH.", [["Accueil", "index.html"], ["Mentions légales", ""]])}
   <section class="card prose">
-    <p class="updated">Dernière mise à jour : août 2026</p>
+    <p class="updated">Dernière mise à jour : <time datetime="2026-08">août 2026</time></p>
     <h2>Éditeur</h2>
     <p>KALEFLEH — Service de courses et shopping en Côte d'Ivoire.<br />Email : <a href="mailto:kalefleh.shop@gmail.com">kalefleh.shop@gmail.com</a> · WhatsApp : voir <a href="contact.html">page Contact</a>.</p>
     <h2>Hébergement</h2>
@@ -658,4 +621,4 @@ livraisonPage();
 contactPage();
 payerPage();
 legalPages();
-console.log("Terminé.");
+console.log("Toutes les pages régénérées avec succès.");

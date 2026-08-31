@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page introuvable — KALEFLEH</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/png" href="favicon-32.png" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta name="theme-color" content="#1C1208" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<a href="#main-content" class="skip-link">Aller au contenu</a>
+<nav class="navbar">
+  <a href="index.html" class="navbar-logo">KALEFLEH</a>
+  <div class="navbar-links" id="navbarLinks">
+    <a href="tarifs.html" class="navbar-nowrap">Tarifs</a>
+    <a href="suivi.html">Suivi</a>
+    <a href="faq.html">FAQ</a>
+    <a href="payer.html" class="navbar-nowrap">Payer</a>
+    <a href="contact.html">Contact</a>
+    <a href="index.html#devis" class="btn-nav">Devis gratuit</a>
+  </div>
+  <button type="button" class="navbar-burger" id="navbarBurger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbarLinks">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<main class="wrap" id="main-content">
+  <section class="not-found">
+    <span class="not-found-ic">📦</span>
+    <h1>Ce colis-là s'est perdu en route</h1>
+    <p>La page que tu cherches n'existe pas, ou plus. Voici où aller à la place :</p>
+    <div class="not-found-links">
+      <a href="index.html" class="btn-primary">🏠 Retour à l'accueil</a>
+      <a href="suivi.html" class="btn-outline">📦 Suivre ma commande</a>
+      <a href="faq.html" class="btn-outline">❓ Voir la FAQ</a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-cols">
+    <div class="footer-col">
+      <strong>KALEFLEH</strong>
+      <p>Tu commandes, on fait tes courses en Côte d'Ivoire — où que tu sois.</p>
+    </div>
+    <div class="footer-col">
+      <a href="mailto:kalefleh.shop@gmail.com">kalefleh.shop@gmail.com</a>
+      <span>Côte d'Ivoire 🇨🇮 · Diaspora 🌍</span>
+    </div>
+  </div>
+  <p class="footer-copy">© <span id="year"></span> KALEFLEH — Tu commandes, on fait tes courses.</p>
+</footer>
+
+<script src="nav.js"></script>
+<script src="year.js"></script>
+</body>
+</html>

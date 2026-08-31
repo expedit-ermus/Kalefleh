@@ -71,12 +71,12 @@
   </script>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Aller au contenu</a>
 
   <!-- NAVBAR -->
   <nav class="navbar">
     <a href="#top" class="navbar-logo">KALEFLEH</a>
-    <button type="button" class="navbar-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbar-links">☰</button>
-    <div class="navbar-links" id="navbar-links">
+<div class="navbar-links" id="navbarLinks">
       <a href="#temoignages">Avis</a>
       <a href="#comment">Étapes</a>
       <a href="tarifs.html" class="navbar-nowrap">Tarifs</a>
@@ -85,6 +85,9 @@
       <a href="contact.html">Contact</a>
       <a href="#devis" class="btn-nav">Devis gratuit</a>
     </div>
+    <button type="button" class="navbar-burger" id="navbarBurger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbarLinks">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
   <!-- HERO -->
@@ -108,7 +111,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="main-content">
 
     <!-- PAIN -->
     <section class="card pain">
@@ -209,12 +212,13 @@
     <section class="card" id="tarifs">
       <p class="eyebrow center">Tarifs</p>
       <h2 class="center">Prestation simple et transparente</h2>
-      <p class="section-sub center">La prestation couvre nos déplacements. L'expédition est en plus, à la charge du client.</p>
-      <div class="price-grid">
-        <div class="price"><strong>8 000 F</strong><span>Petite course</span><p>3 à 5 petits articles — zone Abidjan</p></div>
-        <div class="price price-hot"><strong>15 000 F</strong><span>Course complète</span><p>Shopping multi-boutiques (marché, magasins)</p><span class="pop">★ Le plus choisi</span></div>
-        <div class="price"><strong>Sur devis</strong><span>Grosse commande</span><p>Plusieurs livraisons, différentes villes</p></div>
+<div class="price-grid" id="tarifsGrid">
+        <div class="price" data-tier="simple" data-value="8000" role="button" tabindex="0" aria-pressed="false"><strong>8 000 F</strong><span>Petite course</span><p>3 à 5 petits articles — zone Abidjan</p></div>
+        <div class="price price-hot" data-tier="complete" data-value="15000" role="button" tabindex="0" aria-pressed="false"><strong>15 000 F</strong><span>Course complète</span><p>Shopping multi-boutiques (marché, magasins)</p><span class="pop">★ Le plus choisi</span></div>
+        <div class="price" data-tier="devis" data-value="0" role="button" tabindex="0" aria-pressed="false"><strong>Sur devis</strong><span>Grosse commande</span><p>Plusieurs livraisons, différentes villes</p></div>
+
       </div>
+      <p class="center muted price-hint" id="prestationHint">La prestation est calculée automatiquement selon vos courses cochées ci-dessous — cliquez une carte pour la choisir vous-même.</p>
     </section>
 
     <!-- FORMULAIRE DEVIS EXPRESS -->
@@ -325,6 +329,18 @@
           </label>
         </div>
 
+        <!-- Consentement RGPD (double consentement) -->
+        <div class="consent-block">
+          <label class="consent-line">
+            <input type="checkbox" id="consentTraitement" name="consentTraitement" required aria-required="true" />
+            <span>J'accepte que KALEFLEH utilise mes informations (nom, téléphone, adresse…) pour traiter ma demande de devis. <a href="mentions-legales.html" target="_blank" rel="noopener">Voir la politique de confidentialité</a>. *</span>
+          </label>
+          <label class="consent-line">
+            <input type="checkbox" id="consentMarketing" name="consentMarketing" />
+            <span>J'accepte de recevoir des offres et actualités KALEFLEH par WhatsApp ou email (facultatif, désinscription possible à tout moment).</span>
+          </label>
+        </div>
+
         <!-- CTA + garantie -->
         <div class="form-cta">
           <div class="recap" id="recap" hidden></div>
@@ -425,10 +441,8 @@
     </div>
     <p class="footer-copy">© <span id="year"></span> KALEFLEH — Tu commandes, on fait tes courses.</p>
   </footer>
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
+  <script src="year.js"></script>
   <script src="app.js"></script>
-  <script src="nav.js" defer></script>
+<script src="nav.js" defer></script>
 </body>
 </html>
