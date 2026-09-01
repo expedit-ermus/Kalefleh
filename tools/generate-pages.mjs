@@ -338,7 +338,7 @@ function tarifsPage() {
     <p class="muted">La prestation rémunère nos déplacements et le temps passé : shopping, marché, contrôle, photos, envoi.</p>
     <div class="price-grid">
       <div class="price"><strong>8 000 F</strong><span>Petite course</span><p>3 à 5 petits articles — une zone (Abidjan)</p></div>
-      <div class="price price-hot"><strong>15 000 F</strong><span>Course complète</span><p>Multi-boutiques, marché, plusieurs villes à l'intérieur</p><span class="pop">★ Le plus choisi</span></div>
+      <div class="price price-hot"><span class="pop">★ Le plus choisi</span><strong>15 000 F</strong><span>Course complète</span><p>Multi-boutiques, marché, plusieurs villes à l'intérieur</p></div>
       <div class="price"><strong>Sur devis</strong><span>Grosse commande</span><p>Plusieurs livraisons, différentes villes, gros volumes</p></div>
     </div>
     <p class="muted" style="font-size:.85rem">La prestation exacte est confirmée au devis, avant toute avance. Aucun coût pour la demande.</p>
