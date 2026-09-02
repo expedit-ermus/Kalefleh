@@ -281,8 +281,7 @@ function nichePage(n) {
   const body = `
   ${hero(n.emoji, `${n.h1}<br /><span>${n.h1Span}</span>`, n.tagline, [["Accueil", "index.html"], [n.title.split(" — ")[0], ""]], n.pills)}`;
 
-  const typesLink = `index.html?type=${enc(n.type)}#devis`;
-  const ctaLink = n.budget ? `${typesLink}&budget=${n.budget}` : typesLink;
+  const ctaLink = `index.html?type=${enc(n.type)}${n.budget ? `&budget=${n.budget}` : ""}#devis`;
 
   const out = body + `
   <section class="card">
