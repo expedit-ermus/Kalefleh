@@ -137,6 +137,7 @@ const niches = [
     h1: "Vêtements &amp; mode",
     h1Span: "achetés pour toi au pays",
     tagline: "Tu repères ce que tu veux — pagne, wax, boutique, tissu au marché — on te le trouve, on achète, et on t'envoie tout avec photos et reçus.",
+    image: "niche-vetements.jpg",
     pills: ["👗 Prêt-à-porter", "🪡 Pagne &amp; wax", "👟 Chaussures", "👜 Sacs"],
     type: "Vêtements",
     budget: "",
@@ -174,6 +175,7 @@ const niches = [
     h1: "Cosmétiques &amp; parfums",
     h1Span: "sans mauvaise surprise",
     tagline: "Parfums, soins, maquillage… On achète exactement la référence demandée, dans des boutiques sérieuses, et tu valides les photos avant envoi.",
+    image: "niche-cosmetiques.jpg",
     pills: ["🌸 Parfums", "🧴 Soins du visage", "✨ Maquillage", "🫧 Hygiène"],
     type: "Cosmétiques",
     budget: "100000",
@@ -211,6 +213,7 @@ const niches = [
     h1: "Perruques &amp; cheveux",
     h1Span: "ton style, exactement",
     tagline: "Perruques prêtes à porter, mèches de qualité, bonnets, tresses… On choisit avec toi (photos avant), on achète et on t'envoie tout.",
+    image: "niche-perruques.jpg",
     pills: ["💇🏾‍♀️ Perruques", "🧬 Mèches &amp; tresses", "🧢 Bonnets", "🪮 Accessoires"],
     type: "Perruques",
     budget: "200000",
@@ -247,6 +250,7 @@ const niches = [
     h1: "Alimentaire &amp; épicerie",
     h1Span: "les saveurs de là-bas",
     tagline: "Attiéké, épices, huile, panier de la semaine ou colis de famille : on fait les courses au marché et en épicerie, avec dates de péremption vérifiées.",
+    image: "niche-alimentaire.jpg",
     pills: ["🍚 Attiéké &amp; acadjou", "🧂 Épices", "🫙 Conserves", "🧺 Panier de famille"],
     type: "Alimentaire",
     budget: "100000",
@@ -279,7 +283,10 @@ const niches = [
 
 function nichePage(n) {
   const body = `
-  ${hero(n.emoji, `${n.h1}<br /><span>${n.h1Span}</span>`, n.tagline, [["Accueil", "index.html"], [n.title.split(" — ")[0], ""]], n.pills)}`;
+  ${hero(n.emoji, `${n.h1}<br /><span>${n.h1Span}</span>`, n.tagline, [["Accueil", "index.html"], [n.title.split(" — ")[0], ""]], n.pills)}
+  <div class="niche-banner-wrap">
+    <img src="images/${n.image}" alt="${n.title.split(" — ")[0]}" class="niche-banner-img" width="840" height="320" loading="eager" />
+  </div>`;
 
   const ctaLink = `index.html?type=${enc(n.type)}${n.budget ? `&budget=${n.budget}` : ""}#devis`;
 

@@ -927,40 +927,132 @@ details p { color: var(--muted); margin-top: 8px; font-size: .92rem; }
 .crumbs a { color: var(--amber-light); text-decoration: none; }
 .crumbs a:hover { text-decoration: underline; }
 
+/* Hero Visual Showcase */
+.hero-visual {
+  margin: 36px auto 0;
+  max-width: 840px;
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1.5px solid rgba(255, 166, 77, 0.25);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 107, 0, 0.15);
+}
+.hero-photo {
+  width: 100%;
+  height: 380px;
+  object-fit: cover;
+  object-position: center 25%;
+  display: block;
+}
+.hero-badge-float {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: rgba(9, 6, 3, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 166, 77, 0.35);
+  border-radius: 9999px;
+  color: #FFF8EE;
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+.dot-live {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00E599;
+  box-shadow: 0 0 10px #00E599;
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.3); }
+}
+
 /* Grille niches (index + pages niches) */
-.niche-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.niche-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
 .niche-card {
   display: flex;
-  gap: 14px;
-  align-items: flex-start;
+  flex-direction: column;
   background: var(--sand);
   border: 1.5px solid var(--line);
-  border-radius: 18px;
-  padding: 20px;
+  border-radius: 20px;
+  overflow: hidden;
   text-decoration: none;
   color: var(--text);
-  transition: all .2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all .25s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
 }
 .niche-card:hover {
-  border-color: rgba(255, 166, 77, 0.4);
+  border-color: rgba(255, 166, 77, 0.5);
   background: #1B1107;
-  transform: translateY(-3px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 107, 0, 0.12);
 }
-.niche-ic {
-  flex: 0 0 auto;
-  width: 54px;
-  height: 54px;
-  border-radius: 16px;
-  background: var(--amber-tint);
-  display: grid;
-  place-items: center;
-  font-size: 1.6rem;
-  border: 1px solid rgba(255, 166, 77, 0.2);
+.niche-thumb {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: #080502;
 }
-.niche-card strong { display: block; color: #FFFFFF; font-size: 1.05rem; font-family: var(--font-display); }
-.niche-card p { color: var(--muted); font-size: .86rem; margin-top: 3px; }
-.niche-card .go { margin-left: auto; color: var(--primary-light); font-weight: 800; font-size: 1.2rem; }
+.niche-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .4s ease;
+}
+.niche-card:hover .niche-thumb img {
+  transform: scale(1.05);
+}
+.niche-pill {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(9, 6, 3, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 166, 77, 0.35);
+  color: var(--amber-light);
+  padding: 5px 12px;
+  border-radius: 30px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+.niche-body {
+  padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.niche-body strong { display: block; color: #FFFFFF; font-size: 1.1rem; font-family: var(--font-display); font-weight: 800; }
+.niche-body p { color: var(--muted); font-size: .86rem; margin-top: 4px; line-height: 1.5; }
+.niche-link { margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; color: var(--primary-light); font-weight: 800; font-size: 0.85rem; }
+.niche-card:hover .niche-link { color: #FFFFFF; }
+
+/* Fiche niche : héro bannière réaliste */
+.niche-banner-wrap {
+  margin: 24px auto 0;
+  max-width: 840px;
+  height: 320px;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1.5px solid rgba(255, 166, 77, 0.25);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+.niche-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 
 /* Fiche niche : héro avec gros emoji + à propos + liste choix/limites */
 .niche-hero-ic { display: block; font-size: 3rem; margin-bottom: 10px; position: relative; }
