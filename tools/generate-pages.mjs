@@ -523,7 +523,7 @@ function payerPage() {
         </div>
       </div>
       <fieldset class="form-block fieldset">
-        <legend class="label"><h3>2. Moyen de paiement envoyé</h3></legend>
+        <legend class="legend-title">2. Moyen de paiement envoyé</legend>
         <div class="method-grid">
           <label class="method"><input type="radio" name="methode" value="Wave" checked /> <span class="m-ic">🌊</span><div>Wave <span class="m-note">Transfert instantané</span></div></label>
           <label class="method"><input type="radio" name="methode" value="Orange Money" /> <span class="m-ic">🟠</span><div>Orange Money <span class="m-note">Dispo tout CI</span></div></label>

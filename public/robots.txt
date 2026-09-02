@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin.html
+Disallow: /api/
+Disallow: /apercu.html
 
 Sitemap: https://kalefleh.vercel.app/sitemap.xml

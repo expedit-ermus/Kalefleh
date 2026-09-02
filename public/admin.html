@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KALEFLEH — Espace Admin</title>
+  <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" type="image/png" href="favicon-32.png" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="style.css" />
@@ -194,8 +195,8 @@
         </div>
       </div>
       <div class="admin-tools">
-        <input type="search" id="searchInput" placeholder="Rechercher (nom, téléphone, réf)…" />
-        <select id="statutFilter">
+        <input type="search" id="searchInput" placeholder="Rechercher (nom, téléphone, réf)…" aria-label="Rechercher une commande par nom, téléphone ou référence" />
+        <select id="statutFilter" aria-label="Filtrer par statut de commande">
           <option value="">Tous les statuts</option>
           <option>NOUVEAU</option>
           <option>CONTACTÉ</option>

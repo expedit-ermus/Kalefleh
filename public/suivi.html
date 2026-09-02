@@ -10,7 +10,11 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Suivi de commande — KALEFLEH" />
+  <meta property="og:description" content="Suis l'avancement de ta demande de devis ou de ta commande KALEFLEH en direct avec ta référence." />
   <meta property="og:url" content="https://kalefleh.vercel.app/suivi.html" />
+  <meta property="og:image" content="https://kalefleh.vercel.app/og-image.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <link rel="canonical" href="https://kalefleh.vercel.app/suivi.html" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -19,13 +23,16 @@
 <body>
 <a href="#main-content" class="skip-link">Aller au contenu</a>
 
-  <nav class="navbar">
-    <a href="/" class="navbar-logo">KALEFLEH</a>
-<div class="navbar-links" id="navbarLinks">
-      <a href="/#comment">Étapes</a>
-      <a href="/#tarifs">Tarifs</a>
-      <a href="/#devis" class="btn-nav">Devis gratuit</a>
-    </div>
+<nav class="navbar">
+  <a href="index.html" class="navbar-logo">KALEFLEH</a>
+  <div class="navbar-links" id="navbarLinks">
+    <a href="tarifs.html" class="navbar-nowrap">Tarifs</a>
+    <a href="suivi.html">Suivi</a>
+    <a href="faq.html">FAQ</a>
+    <a href="payer.html" class="navbar-nowrap">Payer</a>
+    <a href="contact.html">Contact</a>
+    <a href="index.html#devis" class="btn-nav">Devis gratuit</a>
+  </div>
   <button type="button" class="navbar-burger" id="navbarBurger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navbarLinks">
     <span></span><span></span><span></span>
   </button>
@@ -78,7 +85,7 @@
 
       <div class="msg-form" id="rMsgBox" hidden>
         <h3 style="font-size:1rem;margin:18px 0 10px">✉️ Écrire à KALEFLEH</h3>
-        <textarea id="cMsg" rows="2" maxlength="500" placeholder="Une question, une précision, une photo à décrire ? On te répond vite."></textarea>
+        <textarea id="cMsg" rows="2" maxlength="500" placeholder="Une question, une précision, une photo à décrire ? On te répond vite." aria-label="Message à KALEFLEH concernant votre commande"></textarea>
         <input type="text" id="cHp" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp-field" />
         <div class="msg-actions">
           <button class="btn-primary" id="btnMsg">Envoyer le message</button>
@@ -136,7 +143,8 @@
     </div>
     <p class="footer-copy">© <span id="year"></span> KALEFLEH — Tu commandes, on fait tes courses.</p>
   </footer>
-
-<script src="suivi.js"></script>\n  <script src="nav.js" defer></script>
+  <script src="suivi.js" defer></script>
+  <script src="nav.js" defer></script>
+  <script src="year.js" defer></script>
 </body>
 </html>
